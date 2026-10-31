@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Tillskott</title>
+<title>Dosa</title>
 <meta name="theme-color" content="#2f7d5b">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Tillskott">
+<meta name="apple-mobile-web-app-title" content="Dosa">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -100,7 +100,7 @@ textarea { min-height: 60px; resize: vertical; }
 </head>
 <body>
 <header>
-  <h1>Tillskott</h1>
+  <h1>Dosa</h1>
   <button id="syncState" class="iconbtn" style="min-width:auto;padding:0 10px;height:32px;font-size:13px" title="Synka nu">Ej synkad</button>
 </header>
 <main>
@@ -126,6 +126,7 @@ const STORE_KEY = 'tillskott.data.v1';
 const SYNC_KEY = 'tillskott.sync.v1';
 const NOTIFIED_KEY = 'tillskott.notified';
 const GIST_FILE = 'tillskott.json';
+// Nycklar och gist-beskrivning behåller det gamla namnet så att befintlig data och synk hittas
 const GIST_DESC = 'Tillskott – appdata (skapad av Tillskott-appen)';
 const WEEKDAYS = ['Mån', 'Tis', 'Ons', 'Tor', 'Fre', 'Lör', 'Sön'];
 
@@ -466,7 +467,7 @@ function renderSettings() {
   };
   el.querySelector('[data-act=testnotify]').onclick = async () => {
     if ('Notification' in window && Notification.permission === 'default') { try { await Notification.requestPermission(); } catch {} }
-    const ok = await notify('Tillskott', 'Så här ser en påminnelse ut.');
+    const ok = await notify('Dosa', 'Så här ser en påminnelse ut.');
     if (!ok) toast('Notiser är inte tillgängliga här – påminnelsen visas i appen i stället');
     renderSettings();
   };
@@ -484,7 +485,7 @@ function renderSettings() {
   el.querySelector('[data-act=export]').onclick = () => {
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob); a.download = `tillskott-${dateKey(new Date())}.json`; a.click();
+    a.href = URL.createObjectURL(blob); a.download = `dosa-${dateKey(new Date())}.json`; a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   };
   const file = el.querySelector('#s-file');

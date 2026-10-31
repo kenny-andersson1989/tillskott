@@ -1,5 +1,5 @@
 // Enkel service worker: gör appen installerbar, fungerar offline och kan visa notiser.
-const CACHE = 'tillskott-v1';
+const CACHE = 'dosa-v2';
 const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'icon.svg', 'icon-180.png', 'icon-512.png'];
 
 self.addEventListener('install', e => {
