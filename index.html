@@ -27,11 +27,10 @@ body { padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
 header { position: sticky; top: 0; z-index: 5; background: var(--bg); padding: calc(10px + env(safe-area-inset-top)) 16px 8px;
   display: flex; align-items: center; justify-content: space-between; gap: 8px; border-bottom: 1px solid var(--line); }
 header h1 { font-size: 20px; margin: 0; }
-#syncState { font-size: 13px; color: var(--muted); }
 main { max-width: 640px; margin: 0 auto; padding: 12px 16px; }
 nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 5; display: flex; background: var(--card);
   border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom); }
-nav button { flex: 1; border: 0; background: none; color: var(--muted); padding: 10px 4px 12px; font: inherit; font-size: 13px; }
+nav button { flex: 1; min-width: 0; border: 0; background: none; color: var(--muted); padding: 9px 2px 11px; font: inherit; font-size: 11.5px; white-space: nowrap; }
 nav button span { display: block; font-size: 20px; line-height: 1.2; }
 nav button.on { color: var(--accent); font-weight: 600; }
 .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; margin-bottom: 12px; }
@@ -44,14 +43,15 @@ h3 { font-size: 15px; margin: 0 0 6px; color: var(--muted); font-weight: 600; }
 .daynav strong { font-size: 17px; }
 .iconbtn { border: 1px solid var(--line); background: var(--card); color: var(--text); border-radius: 10px;
   min-width: 40px; height: 40px; font-size: 18px; }
-.progress { height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; margin: 6px 0 2px; }
-.progress div { height: 100%; background: var(--accent); width: 0; transition: width .2s; }
-.slot { margin-bottom: 12px; }
-.slot-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+.progress { height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; margin: 6px 0 2px; position: relative; }
+.progress div { position: absolute; left: 0; top: 0; height: 100%; background: var(--accent); width: 0; transition: width .2s; }
+.progress .plan { background: color-mix(in srgb, var(--accent) 30%, var(--line)); }
+.slot-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 4px; }
 .slot-head .time { font-weight: 700; font-size: 16px; }
-.item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--line); cursor: pointer; user-select: none; }
+.slot-head .clock { font-weight: 400; color: var(--muted); font-size: 14px; margin-left: 6px; }
+.item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--line); cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; }
 .item:first-of-type { border-top: 0; }
-.check { flex: none; width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--line);
+.check { flex: none; width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--line);
   display: grid; place-items: center; color: transparent; font-size: 16px; font-weight: 700; }
 .item.done .check { background: var(--accent); border-color: var(--accent); color: #fff; }
 .item.done .name { text-decoration: line-through; color: var(--muted); }
@@ -63,24 +63,31 @@ h3 { font-size: 15px; margin: 0 0 6px; color: var(--muted); font-weight: 600; }
 .btn.ghost { background: none; border: 1px solid var(--line); color: var(--text); }
 .btn.danger { background: none; border: 1px solid var(--line); color: var(--danger); }
 .btn.small { padding: 7px 12px; font-size: 14px; }
+.btn:disabled { opacity: .45; }
 .btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-label { display: block; font-size: 14px; font-weight: 600; margin: 10px 0 4px; }
-input[type=text], input[type=password], input[type=time], textarea, select {
+label { display: block; font-size: 14px; font-weight: 600; margin: 12px 0 4px; }
+input[type=text], input[type=password], input[type=time], input[type=url], textarea, select {
   width: 100%; font: inherit; font-size: 16px; padding: 10px; border-radius: 10px; border: 1px solid var(--line);
-  background: var(--bg); color: var(--text); }
-textarea { min-height: 60px; resize: vertical; }
-.times { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-.times .t { display: flex; align-items: center; gap: 4px; }
-.times input { width: 120px; }
+  background: var(--bg); color: var(--text); min-width: 0; }
+textarea { min-height: 70px; resize: vertical; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button { padding: 7px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg); color: var(--text); font: inherit; font-size: 14px; }
+.chips button.on { background: var(--accent); border-color: var(--accent); color: #fff; }
 .days { display: flex; gap: 4px; flex-wrap: wrap; }
 .days button { flex: 1; min-width: 40px; padding: 8px 0; border-radius: 8px; border: 1px solid var(--line);
   background: var(--bg); color: var(--muted); font: inherit; font-size: 14px; }
 .days button.on { background: var(--accent); border-color: var(--accent); color: #fff; }
-.supp { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid var(--line); }
+.nrow { display: grid; grid-template-columns: 1fr 80px 72px 36px; gap: 6px; margin-bottom: 6px; }
+.nrow input, .nrow select { padding: 8px; }
+.nrow .iconbtn { min-width: 36px; height: auto; }
+.mrow { display: grid; grid-template-columns: 1fr 110px 36px 36px 36px; gap: 6px; margin-bottom: 6px; align-items: center; }
+.mrow .iconbtn { min-width: 36px; height: 40px; font-size: 15px; }
+.supp { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid var(--line); cursor: pointer; }
 .supp:first-of-type { border-top: 0; }
 .supp.paused .name { color: var(--muted); }
 .pill { display: inline-block; font-size: 12px; padding: 1px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); margin-left: 6px; font-weight: 600; }
 .pill.grey { background: var(--line); color: var(--muted); }
+a { color: var(--accent); }
 .hist { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
 .hist div { aspect-ratio: 1; border-radius: 6px; display: grid; place-items: center; font-size: 12px; background: var(--line); color: var(--muted); cursor: pointer; }
 .hist .wd { aspect-ratio: auto; background: none; font-weight: 600; cursor: default; }
@@ -89,9 +96,22 @@ textarea { min-height: 60px; resize: vertical; }
 .hist .p2 { background: color-mix(in srgb, var(--accent) 60%, var(--line)); color: #fff; }
 .hist .p3 { background: var(--accent); color: #fff; }
 .hist .today { outline: 2px solid var(--text); outline-offset: -2px; }
+.nut { padding: 8px 0; border-top: 1px solid var(--line); }
+.nut:first-of-type { border-top: 0; }
+.nut .top { display: flex; justify-content: space-between; gap: 8px; font-size: 15px; }
+.nut .top b { font-weight: 600; }
+.nut .val { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.nut .src { font-size: 12px; color: var(--muted); }
+.nut.zero .top b { color: var(--muted); font-weight: 500; }
+.legend { display: flex; gap: 14px; font-size: 13px; color: var(--muted); margin-top: 4px; }
+.legend i { display: inline-block; width: 12px; height: 8px; border-radius: 3px; margin-right: 5px; vertical-align: middle; background: var(--accent); }
+.legend i.plan { background: color-mix(in srgb, var(--accent) 30%, var(--line)); }
 .toggle { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 8px 0; font-weight: 600; font-size: 15px; }
 .toggle input { width: 22px; height: 22px; }
 .empty-state { text-align: center; padding: 28px 10px; color: var(--muted); }
+.preview { font-size: 14px; max-height: 340px; overflow: auto; border: 1px solid var(--line); border-radius: 10px; padding: 4px 10px; margin-top: 10px; }
+.preview div { padding: 6px 0; border-top: 1px solid var(--line); }
+.preview div:first-child { border-top: 0; }
 #toast { position: fixed; left: 50%; bottom: calc(84px + env(safe-area-inset-bottom)); transform: translateX(-50%);
   background: var(--text); color: var(--bg); padding: 9px 16px; border-radius: 999px; font-size: 14px; opacity: 0; pointer-events: none; transition: opacity .2s; z-index: 20; max-width: 90vw; }
 #toast.show { opacity: 1; }
@@ -101,10 +121,11 @@ textarea { min-height: 60px; resize: vertical; }
 <body>
 <header>
   <h1>Dosa</h1>
-  <button id="syncState" class="iconbtn" style="min-width:auto;padding:0 10px;height:32px;font-size:13px" title="Synka nu">Ej synkad</button>
+  <button id="syncState" class="iconbtn" style="min-width:auto;padding:0 10px;height:32px;font-size:13px" title="Synka nu">Lokalt</button>
 </header>
 <main>
   <section id="view-today"></section>
+  <section id="view-nutrients" class="hidden"></section>
   <section id="view-list" class="hidden"></section>
   <section id="view-history" class="hidden"></section>
   <section id="view-settings" class="hidden"></section>
@@ -112,11 +133,13 @@ textarea { min-height: 60px; resize: vertical; }
 </main>
 <nav>
   <button data-view="today" class="on"><span>✓</span>Idag</button>
+  <button data-view="nutrients"><span>📊</span>Näring</button>
   <button data-view="list"><span>💊</span>Tillskott</button>
   <button data-view="history"><span>📅</span>Historik</button>
   <button data-view="settings"><span>⚙︎</span>Inställningar</button>
 </nav>
 <div id="toast"></div>
+<datalist id="nutrient-names"></datalist>
 
 <script>
 'use strict';
@@ -137,11 +160,29 @@ function lsSet(key, value) {
   try { localStorage.setItem(key, JSON.stringify(value)); } catch {}
 }
 
-// supplements: { id: {id, name, dose, times[], days[0..6], note, active, deleted, updatedAt} }
-// log: { 'YYYY-MM-DD': { 'id@HH:MM': {v: bool, t: ms} } }
-let data = lsGet(STORE_KEY, null) || { supplements: {}, log: {}, settings: { notify: false } };
-data.settings = data.settings || { notify: false };
+// supplements: { id: {id, name, dose, brand, url, contents, nutrients[{k,name,amount,unit}], times[momentnamn], days[0..6], note, active, deleted, createdAt, updatedAt} }
+// moments: [{name, time}] i visningsordning, momentsAt = senast ändrad
+// log: { 'YYYY-MM-DD': { 'id@momentnamn': {v: bool, t: ms} } }
+let data = lsGet(STORE_KEY, null) || { supplements: {}, log: {} };
 let sync = lsGet(SYNC_KEY, { token: '', gistId: '', lastSync: 0 });
+normalize();
+
+function normalize() {
+  data.supplements = data.supplements || {};
+  data.log = data.log || {};
+  data.settings = data.settings || { notify: false };
+  data.moments = data.moments || [];
+  data.momentsAt = data.momentsAt || 0;
+  // Äldre data hade klockslag direkt på tillskotten – gör om dem till tidpunkter
+  let added = false;
+  for (const s of Object.values(data.supplements)) {
+    if (s.deleted) continue;
+    for (const t of s.times || []) if (!data.moments.some(m => m.name === t)) {
+      data.moments.push({ name: t, time: /^\d\d:\d\d$/.test(t) ? t : '' }); added = true;
+    }
+  }
+  if (added) data.momentsAt = data.momentsAt || 1;
+}
 
 function save(changed = true) {
   lsSet(STORE_KEY, data);
@@ -154,9 +195,15 @@ const dateKey = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDat
 const parseKey = k => { const [y, m, d] = k.split('-').map(Number); return new Date(y, m - 1, d); };
 const weekdayIdx = d => (d.getDay() + 6) % 7; // 0 = måndag
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const num = v => parseFloat(String(v).replace(/\s/g, '').replace(',', '.'));
+const fmt = (n, d = 1) => n.toLocaleString('sv-SE', { maximumFractionDigits: n < 10 ? Math.max(d, 2) : n < 100 ? d : 0 });
+
+function momentIdx(name) { const i = data.moments.findIndex(m => m.name === name); return i < 0 ? 999 : i; }
+function momentTime(name) { return data.moments.find(m => m.name === name)?.time || (/^\d\d:\d\d$/.test(name) ? name : ''); }
 
 function activeSupps() {
-  return Object.values(data.supplements).filter(s => !s.deleted).sort((a, b) => a.name.localeCompare(b.name, 'sv'));
+  return Object.values(data.supplements).filter(s => !s.deleted)
+    .sort((a, b) => momentIdx(a.times?.[0]) - momentIdx(b.times?.[0]) || a.name.localeCompare(b.name, 'sv'));
 }
 function scheduledFor(date) {
   const wd = weekdayIdx(date);
@@ -182,6 +229,148 @@ function dayStats(date) {
   return { total: items.length, done };
 }
 
+// ---------- Näringsämnen ----------
+// Referensintag (RI) enligt EU-förordning 1169/2011, bilaga XIII – samma värden som "% DRI/RI" på förpackningar.
+const V = 'vit(?:amin)?\\.?\\s*';
+const NUTRIENTS = [
+  { k: 'vitA', name: 'Vitamin A', unit: 'µg', ri: 800, g: 'v', re: `${V}a|a-vitamin|retinol` },
+  { k: 'vitD', name: 'Vitamin D', unit: 'µg', ri: 5, g: 'v', iu: 0.025, re: `${V}d[23]?|d[23]?-vitamin|kolekalciferol|cholecalciferol` },
+  { k: 'vitE', name: 'Vitamin E', unit: 'mg', ri: 12, g: 'v', re: `${V}e|e-vitamin|tokoferol\\w*|tocopherol\\w*` },
+  { k: 'vitK', name: 'Vitamin K', unit: 'µg', ri: 75, g: 'v', re: `${V}k[12]?|k[12]?-vitamin|menakinon\\w*|fyllokinon` },
+  { k: 'vitC', name: 'Vitamin C', unit: 'mg', ri: 80, g: 'v', re: `${V}c|c-vitamin|askorbinsyra|askorbat|ascorbic acid` },
+  { k: 'b1', name: 'Tiamin (B1)', unit: 'mg', ri: 1.1, g: 'v', re: `${V}b1|b1-vitamin|tiamin|thiamine?` },
+  { k: 'b2', name: 'Riboflavin (B2)', unit: 'mg', ri: 1.4, g: 'v', re: `${V}b2|b2-vitamin|riboflavin` },
+  { k: 'b3', name: 'Niacin (B3)', unit: 'mg', ri: 16, g: 'v', re: `${V}b3|b3-vitamin|niacin(?:amid)?|nikotinamid` },
+  { k: 'b5', name: 'Pantotensyra (B5)', unit: 'mg', ri: 6, g: 'v', re: `${V}b5|b5-vitamin|pantoten\\w*|pantothen\\w*` },
+  { k: 'b6', name: 'Vitamin B6', unit: 'mg', ri: 1.4, g: 'v', re: `${V}b6|b6-vitamin|pyridoxin\\w*` },
+  { k: 'b7', name: 'Biotin (B7)', unit: 'µg', ri: 50, g: 'v', re: `${V}b7|(?:d-)?biotin` },
+  { k: 'b9', name: 'Folsyra (B9)', unit: 'µg', ri: 200, g: 'v', re: `${V}b9|folsyra|folat|folic acid|folate` },
+  { k: 'b12', name: 'Vitamin B12', unit: 'µg', ri: 2.5, g: 'v', re: `${V}b12|b12-vitamin|\\w*kobalamin|\\w*cobalamin` },
+  { k: 'ca', name: 'Kalcium', unit: 'mg', ri: 800, g: 'm', re: 'kalcium|calcium' },
+  { k: 'mg', name: 'Magnesium', unit: 'mg', ri: 375, g: 'm', re: 'magnesium\\w*' },
+  { k: 'k', name: 'Kalium', unit: 'mg', ri: 2000, g: 'm', re: 'kalium|potassium' },
+  { k: 'p', name: 'Fosfor', unit: 'mg', ri: 700, g: 'm', re: 'fosfor|phosphorus' },
+  { k: 'cl', name: 'Klorid', unit: 'mg', ri: 800, g: 'm', re: 'klorid|chloride' },
+  { k: 'fe', name: 'Järn', unit: 'mg', ri: 14, g: 'm', re: 'järn|iron' },
+  { k: 'zn', name: 'Zink', unit: 'mg', ri: 10, g: 'm', re: 'zink|zinc' },
+  { k: 'cu', name: 'Koppar', unit: 'mg', ri: 1, g: 'm', re: 'koppar|copper' },
+  { k: 'mn', name: 'Mangan', unit: 'mg', ri: 2, g: 'm', re: 'mangan|manganese' },
+  { k: 'f', name: 'Fluorid', unit: 'mg', ri: 3.5, g: 'm', re: 'fluorid|fluoride' },
+  { k: 'se', name: 'Selen', unit: 'µg', ri: 55, g: 'm', re: 'selen|selenium' },
+  { k: 'cr', name: 'Krom', unit: 'µg', ri: 40, g: 'm', re: 'krom|chromium' },
+  { k: 'mo', name: 'Molybden', unit: 'µg', ri: 50, g: 'm', re: 'molybden|molybdenum' },
+  { k: 'i', name: 'Jod', unit: 'µg', ri: 150, g: 'm', re: 'jod|iodine' },
+  { k: 'omega3', name: 'Omega-3', unit: 'mg', g: 'o', re: 'omega[- ]?3' },
+  { k: 'epa', name: 'EPA', unit: 'mg', g: 'o', re: 'epa' },
+  { k: 'dha', name: 'DHA', unit: 'mg', g: 'o', re: 'dha' },
+  { k: 'fishoil', name: 'Fiskolja', unit: 'mg', g: 'o', re: 'fiskolja|fish oil' },
+];
+const NUT = Object.fromEntries(NUTRIENTS.map(n => [n.k, n]));
+for (const n of NUTRIENTS) n.rx = new RegExp(`(?<![\\p{L}\\p{N}])(?:${n.re})(?![\\p{L}\\p{N}])`, 'giu');
+document.getElementById('nutrient-names').innerHTML = NUTRIENTS.map(n => `<option value="${esc(n.name)}">`).join('');
+
+const UNITS = ['mg', 'µg', 'g', 'ml', 'IU'];
+const AMOUNT_RX = /(\d+(?:[.,]\d+)?)\s*(mg|µg|μg|ug|mcg|gram|g|ml|iu|ie)(?![\p{L}])/giu;
+function normUnit(u) {
+  u = u.toLowerCase();
+  return { 'μg': 'µg', ug: 'µg', mcg: 'µg', gram: 'g', iu: 'IU', ie: 'IU' }[u] || u;
+}
+function amountsIn(text) {
+  return [...text.matchAll(AMOUNT_RX)].map(m => ({ amount: num(m[1]), unit: normUnit(m[2]), i: m.index, end: m.index + m[0].length }));
+}
+const isMass = a => ['mg', 'µg', 'g'].includes(a.unit);
+function preferred(list) { return list.find(isMass) || list[0]; }
+
+// Hittar kända ämnen i en text. Ämnen inom parentes utan siffror, t.ex. "Jod (kalium)", räknas inte.
+function findNutrients(text) {
+  const masked = text.replace(/\([^()]*\)/g, m => /\d/.test(m) ? m : ' '.repeat(m.length));
+  const hits = [];
+  for (const n of NUTRIENTS) for (const m of masked.matchAll(n.rx)) hits.push({ k: n.k, i: m.index, end: m.index + m[0].length });
+  hits.sort((a, b) => a.i - b.i || (b.end - b.i) - (a.end - a.i));
+  return hits.filter((h, idx) => !hits.slice(0, idx).some(o => h.i < o.end && o.i < h.end));
+}
+
+// Tolkar "innehåll per dos" till en lista med ämnen och mängder
+function parseContents(text, supName = '', qtyText = '') {
+  text = String(text || '').replace(/\r/g, '');
+  const found = {};
+  const add = (k, name, a) => {
+    const key = k + '|' + a.unit;
+    found[key] = found[key] || { k, name, amount: 0, unit: a.unit };
+    found[key].amount += a.amount;
+  };
+  for (const seg of text.split(/\n|;|,(?!\d)/)) {
+    const hits = findNutrients(seg);
+    if (!hits.length) continue;
+    const amounts = amountsIn(seg);
+    const amountFirst = amounts.length && /^\s*$/.test(seg.slice(0, amounts[0].i));
+    const used = new Set();
+    hits.forEach((h, idx) => {
+      let pick;
+      if (amountFirst) {
+        const from = idx ? hits[idx - 1].end : 0;
+        pick = amounts.filter(a => a.i >= from && a.end <= h.i && !used.has(a)).pop();
+      } else {
+        const to = idx + 1 < hits.length ? hits[idx + 1].i : seg.length;
+        pick = preferred(amounts.filter(a => a.i >= h.end && a.end <= to && !used.has(a)));
+      }
+      if (!pick) return;
+      used.add(pick);
+      add(h.k, NUT[h.k].name, pick);
+    });
+  }
+  let out = Object.values(found);
+  if (!out.length) {
+    // Inget känt ämne i texten: använd tillskottets namn och första mängden
+    let a = preferred(amountsIn(text)) || preferred(amountsIn(qtyText));
+    if (a) {
+      a = { ...a };
+      const qty = num(qtyText);
+      if (/(?<![\p{L}])(styck|st|per kapsel|per tablett|\/st)(?![\p{L}])/iu.test(text) && qty > 0) a.amount *= qty;
+      const hit = findNutrients(supName)[0];
+      out = [hit ? { k: hit.k, name: NUT[hit.k].name, amount: a.amount, unit: a.unit }
+                 : { k: 'x:' + supName.trim().toLowerCase(), name: supName.trim(), amount: a.amount, unit: a.unit }];
+    }
+  }
+  return out.map(n => ({ ...n, amount: Math.round(n.amount * 1000) / 1000 }));
+}
+
+function nutrientKeyFor(name) {
+  const t = name.trim();
+  const exact = NUTRIENTS.find(n => n.name.toLowerCase() === t.toLowerCase());
+  if (exact) return exact.k;
+  const hits = findNutrients(t);
+  if (hits.length === 1 && hits[0].i === 0 && hits[0].end >= t.length - 1) return hits[0].k;
+  return 'x:' + t.toLowerCase();
+}
+
+// Räknar om till ämnets egen enhet; null om det inte går (t.ex. ml av ett vitamin)
+function toRefUnit(n, amount, unit) {
+  if (unit === n.unit) return amount;
+  if (unit === 'IU') return n.iu ? amount * n.iu * (n.unit === 'mg' ? 0.001 : 1) : null;
+  const mg = { g: 1000, mg: 1, 'µg': 0.001 }[unit];
+  if (mg == null) return null;
+  return amount * mg / (n.unit === 'mg' ? 1 : 0.001);
+}
+
+function nutrientTotals(date) {
+  const dk = dateKey(date);
+  const totals = {};
+  for (const i of scheduledFor(date)) {
+    const taken = isTaken(dk, i.key);
+    for (const n of i.s.nutrients || []) {
+      const ref = NUT[n.k];
+      let amount = n.amount, unit = n.unit, key = n.k + (ref ? '' : '|' + n.unit);
+      if (ref) { amount = toRefUnit(ref, n.amount, n.unit); unit = ref.unit; if (amount == null) continue; }
+      const t = totals[key] = totals[key] || { k: n.k, name: ref ? ref.name : n.name, unit, ri: ref?.ri, g: ref ? ref.g : 'x', plan: 0, taken: 0, src: [] };
+      t.plan += amount;
+      if (taken) t.taken += amount;
+      if (!t.src.includes(i.s.name)) t.src.push(i.s.name);
+    }
+  }
+  return totals;
+}
+
 // ---------- Vyer ----------
 let currentView = 'today';
 let viewDate = new Date();
@@ -194,12 +383,13 @@ function show(view) {
   window.scrollTo(0, 0);
 }
 document.querySelectorAll('nav button').forEach(b => b.addEventListener('click', () => {
-  if (b.dataset.view === 'today') viewDate = new Date();
+  if ((b.dataset.view === 'today' || b.dataset.view === 'nutrients') && currentView === b.dataset.view) viewDate = new Date();
   show(b.dataset.view);
 }));
 
 function render() {
   if (currentView === 'today') renderToday();
+  else if (currentView === 'nutrients') renderNutrients();
   else if (currentView === 'list') renderList();
   else if (currentView === 'history') renderHistory();
   else if (currentView === 'settings') renderSettings();
@@ -207,12 +397,28 @@ function render() {
 }
 
 function dayLabel(date) {
-  const today = dateKey(new Date());
   const dk = dateKey(date);
   const y = new Date(); y.setDate(y.getDate() - 1);
-  if (dk === today) return 'Idag';
+  if (dk === dateKey(new Date())) return 'Idag';
   if (dk === dateKey(y)) return 'Igår';
   return date.toLocaleDateString('sv-SE', { weekday: 'long', day: 'numeric', month: 'short' });
+}
+function dayNav(onChange) {
+  const isToday = dateKey(viewDate) === dateKey(new Date());
+  const html = `<div class="daynav">
+    <button class="iconbtn" data-act="prev" aria-label="Föregående dag">‹</button>
+    <div style="text-align:center"><strong>${esc(dayLabel(viewDate))}</strong>
+      <div class="muted">${viewDate.toLocaleDateString('sv-SE', { day: 'numeric', month: 'long', year: 'numeric' })}</div></div>
+    <button class="iconbtn" data-act="next" aria-label="Nästa dag" ${isToday ? 'disabled style="opacity:.3"' : ''}>›</button>
+  </div>`;
+  const bind = el => {
+    el.querySelector('[data-act=prev]').onclick = () => { viewDate.setDate(viewDate.getDate() - 1); onChange(); };
+    el.querySelector('[data-act=next]').onclick = () => {
+      if (dateKey(viewDate) === dateKey(new Date())) return;
+      viewDate.setDate(viewDate.getDate() + 1); onChange();
+    };
+  };
+  return { html, bind };
 }
 
 function renderToday() {
@@ -221,73 +427,84 @@ function renderToday() {
   const isToday = dk === dateKey(new Date());
   const items = scheduledFor(viewDate);
   const { total, done } = dayStats(viewDate);
-
-  let html = `<div class="daynav">
-    <button class="iconbtn" data-act="prev" aria-label="Föregående dag">‹</button>
-    <div style="text-align:center"><strong>${esc(dayLabel(viewDate))}</strong>
-      <div class="muted">${viewDate.toLocaleDateString('sv-SE', { day: 'numeric', month: 'long', year: 'numeric' })}</div></div>
-    <button class="iconbtn" data-act="next" aria-label="Nästa dag" ${isToday ? 'disabled style="opacity:.3"' : ''}>›</button>
-  </div>`;
+  const nav = dayNav(renderToday);
+  let html = nav.html;
 
   if (!activeSupps().length) {
     html += `<div class="card empty-state">Du har inga tillskott inlagda än.<div class="btns" style="justify-content:center">
-      <button class="btn" data-act="add">Lägg till tillskott</button></div></div>`;
-    el.innerHTML = html; bindToday(el); return;
-  }
-  if (!items.length) {
+      <button class="btn" data-act="add">Lägg till tillskott</button>
+      <button class="btn secondary" data-act="import">Klistra in en lista</button></div></div>`;
+  } else if (!items.length) {
     html += `<div class="card empty-state">Inget schemalagt den här dagen.</div>`;
-    el.innerHTML = html; bindToday(el); return;
-  }
-
-  html += `<div class="card"><div class="row between"><strong>${done} av ${total} tagna</strong>
-    <span class="muted">${total ? Math.round(done / total * 100) : 0} %</span></div>
-    <div class="progress"><div style="width:${total ? done / total * 100 : 0}%"></div></div></div>`;
-
-  if (isToday) {
-    const due = dueUntaken();
-    if (due.length) html += `<div class="banner">Dags nu: ${due.map(i => esc(i.s.name)).join(', ')}</div>`;
-  }
-
-  const slots = {};
-  for (const i of items) (slots[i.time] = slots[i.time] || []).push(i);
-  for (const t of Object.keys(slots).sort()) {
-    const list = slots[t];
-    const n = list.filter(i => isTaken(dk, i.key)).length;
-    html += `<div class="card slot"><div class="slot-head"><span class="time">${t === '—' ? 'Ingen tid' : esc(t)}</span>
-      <span class="muted">${n}/${list.length} ${list.length > 1 && n < list.length ? `· <a href="#" data-all="${esc(t)}" style="color:var(--accent)">bocka alla</a>` : ''}</span></div>`;
-    for (const i of list) {
-      const taken = data.log[dk]?.[i.key];
-      const when = taken?.v ? new Date(taken.t) : null;
-      const sub = [i.s.dose, when && dateKey(when) === dk ? 'tagen ' + when.toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' }) : '']
-        .filter(Boolean).join(' · ');
-      html += `<div class="item ${taken?.v ? 'done' : ''}" data-key="${esc(i.key)}">
-        <div class="check">✓</div>
-        <div><div class="name">${esc(i.s.name)}</div>${sub ? `<div class="sub">${esc(sub)}</div>` : ''}
-        ${i.s.note ? `<div class="sub">${esc(i.s.note)}</div>` : ''}</div></div>`;
+  } else {
+    html += `<div class="card"><div class="row between"><strong>${done} av ${total} tagna</strong>
+      <span class="muted">${Math.round(done / total * 100)} %</span></div>
+      <div class="progress"><div style="width:${done / total * 100}%"></div></div></div>`;
+    if (isToday) {
+      const due = dueUntaken();
+      if (due.length) html += `<div class="banner">Dags nu: ${due.map(i => esc(i.s.name)).join(', ')}</div>`;
     }
-    html += `</div>`;
+    const slots = {};
+    for (const i of items) (slots[i.time] = slots[i.time] || []).push(i);
+    for (const t of Object.keys(slots).sort((a, b) => momentIdx(a) - momentIdx(b) || a.localeCompare(b))) {
+      const list = slots[t];
+      const n = list.filter(i => isTaken(dk, i.key)).length;
+      const clock = momentTime(t);
+      html += `<div class="card"><div class="slot-head"><span><span class="time">${t === '—' ? 'Ingen tidpunkt' : esc(t)}</span>${clock && clock !== t ? `<span class="clock">${esc(clock)}</span>` : ''}</span>
+        ${n < list.length ? `<button class="btn secondary small" data-all="${esc(t)}">Bocka alla (${list.length - n})</button>` : `<span class="muted">Klart ✓</span>`}</div>`;
+      for (const i of list) {
+        const taken = data.log[dk]?.[i.key];
+        const when = taken?.v ? new Date(taken.t) : null;
+        const sub = [i.s.dose, when && dateKey(when) === dk ? 'tagen ' + when.toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' }) : '']
+          .filter(Boolean).join(' · ');
+        html += `<div class="item ${taken?.v ? 'done' : ''}" data-key="${esc(i.key)}">
+          <div class="check">✓</div>
+          <div><div class="name">${esc(i.s.name)}</div>${sub ? `<div class="sub">${esc(sub)}</div>` : ''}
+          ${i.s.note ? `<div class="sub">${esc(i.s.note)}</div>` : ''}</div></div>`;
+      }
+      html += `</div>`;
+    }
   }
   el.innerHTML = html;
-  bindToday(el);
-}
-function bindToday(el) {
-  el.querySelector('[data-act=prev]')?.addEventListener('click', () => { viewDate.setDate(viewDate.getDate() - 1); renderToday(); });
-  el.querySelector('[data-act=next]')?.addEventListener('click', () => {
-    if (dateKey(viewDate) === dateKey(new Date())) return;
-    viewDate.setDate(viewDate.getDate() + 1); renderToday();
-  });
+  nav.bind(el);
   el.querySelector('[data-act=add]')?.addEventListener('click', () => openEdit(null));
+  el.querySelector('[data-act=import]')?.addEventListener('click', () => { show('settings'); document.getElementById('s-paste')?.scrollIntoView(); });
   el.querySelectorAll('.item').forEach(it => it.addEventListener('click', () => {
-    const dk = dateKey(viewDate);
     setTaken(dk, it.dataset.key, !isTaken(dk, it.dataset.key));
     renderToday();
   }));
-  el.querySelectorAll('[data-all]').forEach(a => a.addEventListener('click', e => {
-    e.preventDefault();
-    const dk = dateKey(viewDate);
-    for (const i of scheduledFor(viewDate)) if (i.time === a.dataset.all && !isTaken(dk, i.key)) setTaken(dk, i.key, true);
+  el.querySelectorAll('[data-all]').forEach(b => b.addEventListener('click', () => {
+    for (const i of scheduledFor(viewDate)) if (i.time === b.dataset.all && !isTaken(dk, i.key)) setTaken(dk, i.key, true);
     renderToday();
   }));
+}
+
+function renderNutrients() {
+  const el = document.getElementById('view-nutrients');
+  const nav = dayNav(renderNutrients);
+  const totals = nutrientTotals(viewDate);
+  const row = t => {
+    const pct = t.ri ? t.taken / t.ri * 100 : 0, planPct = t.ri ? t.plan / t.ri * 100 : 0;
+    return `<div class="nut ${t.plan ? '' : 'zero'}">
+      <div class="top"><b>${esc(t.name)}</b><span class="val">${t.plan ? fmt(t.taken) : '–'}${t.plan && t.plan !== t.taken ? ` <span class="muted">/ ${fmt(t.plan)}</span>` : ''} ${t.unit}
+        <span class="muted">· RI ${fmt(t.ri)} ${t.unit}${t.plan ? ` · <b style="color:var(--text)">${Math.round(pct)} %</b>` : ''}</span></span></div>
+      <div class="progress"><div class="plan" style="width:${Math.min(100, planPct)}%"></div><div style="width:${Math.min(100, pct)}%"></div></div>
+      ${t.src.length ? `<div class="src">${t.src.map(esc).join(', ')}</div>` : ''}</div>`;
+  };
+  const group = g => NUTRIENTS.filter(n => n.g === g).map(n => totals[n.k] || { k: n.k, name: n.name, unit: n.unit, ri: n.ri, plan: 0, taken: 0, src: [] });
+  const others = Object.values(totals).filter(t => t.g === 'o' || t.g === 'x').sort((a, b) => a.name.localeCompare(b.name, 'sv'));
+  el.innerHTML = nav.html + `
+    <div class="card"><h3>Vitaminer</h3>${group('v').map(row).join('')}</div>
+    <div class="card"><h3>Mineraler</h3>${group('m').map(row).join('')}</div>
+    ${others.length ? `<div class="card"><h3>Övrigt</h3>${others.map(t => `<div class="nut"><div class="top"><b>${esc(t.name)}</b>
+      <span class="val">${fmt(t.taken)}${t.plan !== t.taken ? ` <span class="muted">/ ${fmt(t.plan)}</span>` : ''} ${t.unit}</span></div>
+      <div class="src">${t.src.map(esc).join(', ')}</div></div>`).join('')}</div>` : ''}
+    <div class="card muted" style="font-size:13px">
+      <div class="legend" style="margin:0 0 8px"><span><i></i>Avbockat</span><span><i class="plan"></i>Planerat för dagen</span></div>
+      Siffrorna räknas bara på dina tillskott – maten du äter syns inte här. <b>RI</b> är EU:s referensintag, samma värde som
+      "% av DRI/RI" på förpackningarna. Det är ett genomsnittligt märkningsvärde för vuxna, inte en personlig rekommendation och inte en övre gräns.
+      Fråga vården eller apoteket om du undrar vad som passar dig.</div>`;
+  nav.bind(el);
 }
 
 function renderList() {
@@ -296,70 +513,120 @@ function renderList() {
   let html = `<div class="row between" style="margin-bottom:10px"><h2 style="margin:0">Mina tillskott</h2>
     <button class="btn small" data-act="add">+ Lägg till</button></div>`;
   if (!supps.length) {
-    html += `<div class="card empty-state">Inga tillskott än. Tryck på <b>Lägg till</b> för att börja.</div>`;
+    html += `<div class="card empty-state">Inga tillskott än. Tryck på <b>Lägg till</b>, eller klistra in en lista under Inställningar.</div>`;
   } else {
-    html += `<div class="card">`;
-    for (const s of supps) {
-      const days = !s.days || !s.days.length || s.days.length === 7 ? 'Varje dag' : s.days.map(d => WEEKDAYS[d]).join(', ');
-      html += `<div class="supp ${s.active ? '' : 'paused'}" data-id="${s.id}">
-        <div><div class="name"><b>${esc(s.name)}</b>${s.active ? '' : '<span class="pill grey">Pausad</span>'}</div>
-        <div class="muted">${[s.dose, (s.times || []).join(', '), days].filter(Boolean).map(esc).join(' · ')}</div></div>
-        <button class="btn ghost small">Ändra</button></div>`;
+    const groups = {};
+    for (const s of supps) { const g = s.times?.[0] || 'Ingen tidpunkt'; (groups[g] = groups[g] || []).push(s); }
+    for (const [g, list] of Object.entries(groups)) {
+      html += `<div class="card"><h3>${esc(g)}</h3>`;
+      for (const s of list) {
+        const days = !s.days || !s.days.length || s.days.length === 7 ? '' : s.days.map(d => WEEKDAYS[d]).join(', ');
+        const also = (s.times || []).slice(1);
+        html += `<div class="supp ${s.active ? '' : 'paused'}" data-id="${s.id}">
+          <div style="min-width:0"><div class="name"><b>${esc(s.name)}</b>${s.active ? '' : '<span class="pill grey">Pausad</span>'}</div>
+          <div class="muted">${[s.dose, s.brand, also.length ? 'även ' + also.join(', ') : '', days].filter(Boolean).map(esc).join(' · ')}</div>
+          ${s.url ? `<a href="${esc(s.url)}" target="_blank" rel="noopener" class="muted" data-link>Beställ ↗</a>` : ''}</div>
+          <button class="btn ghost small">Ändra</button></div>`;
+      }
+      html += `</div>`;
     }
-    html += `</div>`;
   }
   el.innerHTML = html;
   el.querySelector('[data-act=add]').addEventListener('click', () => openEdit(null));
+  el.querySelectorAll('[data-link]').forEach(a => a.addEventListener('click', e => e.stopPropagation()));
   el.querySelectorAll('.supp').forEach(r => r.addEventListener('click', () => openEdit(r.dataset.id)));
 }
 
 function openEdit(id) {
-  const s = id ? data.supplements[id] : { id: null, name: '', dose: '', times: ['08:00'], days: [0, 1, 2, 3, 4, 5, 6], note: '', active: true };
-  const el = document.getElementById('view-edit');
+  if (!data.moments.length) { data.moments = [{ name: 'Morgon', time: '' }, { name: 'Lunch', time: '' }, { name: 'Kväll', time: '' }]; data.momentsAt = Date.now(); save(); }
+  const src = id ? data.supplements[id] : { name: '', dose: '', brand: '', url: '', contents: '', nutrients: [], times: [data.moments[0].name], days: [0, 1, 2, 3, 4, 5, 6], note: '', active: true };
+  const s = { ...src, nutrients: (src.nutrients || []).map(n => ({ ...n })) };
   let times = [...(s.times || [])];
   let days = s.days && s.days.length ? [...s.days] : [0, 1, 2, 3, 4, 5, 6];
+  const el = document.getElementById('view-edit');
 
+  const keep = () => {
+    for (const f of ['name', 'dose', 'brand', 'url', 'contents', 'note']) s[f] = el.querySelector('#f-' + f).value;
+    s.active = el.querySelector('#f-active').checked;
+    el.querySelectorAll('.nrow').forEach((r, n) => {
+      s.nutrients[n].name = r.querySelector('[data-n=name]').value;
+      s.nutrients[n].amount = r.querySelector('[data-n=amount]').value;
+      s.nutrients[n].unit = r.querySelector('[data-n=unit]').value;
+    });
+  };
   const draw = () => {
     el.innerHTML = `<div class="row between" style="margin-bottom:10px"><h2 style="margin:0">${id ? 'Ändra tillskott' : 'Nytt tillskott'}</h2>
       <button class="btn ghost small" data-act="cancel">Avbryt</button></div>
       <div class="card">
-        <label for="f-name">Namn</label><input type="text" id="f-name" value="${esc(s.name)}" placeholder="t.ex. D-vitamin" autocomplete="off">
-        <label for="f-dose">Dos / mängd (som du själv anger)</label><input type="text" id="f-dose" value="${esc(s.dose)}" placeholder="t.ex. 1 kapsel" autocomplete="off">
-        <label>Tidpunkter</label>
-        <div class="times">${times.map((t, n) => `<span class="t"><input type="time" value="${esc(t)}" data-t="${n}">
-          <button class="iconbtn" data-rm="${n}" aria-label="Ta bort tid">×</button></span>`).join('')}
-          <button class="btn secondary small" data-act="addtime">+ Tid</button></div>
+        <label for="f-name">Namn</label><input type="text" id="f-name" value="${esc(s.name)}" placeholder="t.ex. Multivitamin" autocomplete="off">
+        <label for="f-dose">Mängd (som du själv anger)</label><input type="text" id="f-dose" value="${esc(s.dose)}" placeholder="t.ex. 1 kapsel" autocomplete="off">
+        <label>Tidpunkt</label>
+        <div class="chips">${data.moments.map(m => `<button data-m="${esc(m.name)}" class="${times.includes(m.name) ? 'on' : ''}">${esc(m.name)}</button>`).join('')}</div>
+        <div class="row" style="margin-top:6px"><input type="text" id="f-newmoment" placeholder="Ny tidpunkt, t.ex. PWO" autocomplete="off">
+          <button class="btn secondary small" data-act="addmoment">Lägg till</button></div>
         <label>Dagar</label>
         <div class="days">${WEEKDAYS.map((d, n) => `<button data-day="${n}" class="${days.includes(n) ? 'on' : ''}">${d}</button>`).join('')}</div>
+      </div>
+      <div class="card"><h3>Innehåll per dos</h3>
+        <p class="muted" style="margin-top:0">Används för Näring-fliken. Klistra in texten från förpackningen och tryck <b>Tolka</b>, eller fyll i raderna själv.</p>
+        <textarea id="f-contents" placeholder="t.ex. Vitamin D 100 µg, Vitamin K 150 µg">${esc(s.contents)}</textarea>
+        <div class="btns" style="margin:6px 0 10px"><button class="btn secondary small" data-act="parse">Tolka texten</button></div>
+        ${s.nutrients.map((n, i) => `<div class="nrow">
+          <input type="text" data-n="name" list="nutrient-names" value="${esc(n.name)}" placeholder="Ämne">
+          <input type="text" data-n="amount" inputmode="decimal" value="${esc(n.amount)}" placeholder="Mängd">
+          <select data-n="unit">${UNITS.map(u => `<option ${u === n.unit ? 'selected' : ''}>${u}</option>`).join('')}</select>
+          <button class="iconbtn" data-rmn="${i}" aria-label="Ta bort rad">×</button></div>`).join('')}
+        <button class="btn ghost small" data-act="addn">+ Ämne</button>
+      </div>
+      <div class="card">
+        <label for="f-brand" style="margin-top:0">Märke</label><input type="text" id="f-brand" value="${esc(s.brand)}" autocomplete="off">
+        <label for="f-url">Beställ ifrån (länk)</label><input type="url" id="f-url" value="${esc(s.url)}" placeholder="https://…" autocomplete="off">
         <label for="f-note">Anteckning</label><textarea id="f-note" placeholder="t.ex. tas med mat">${esc(s.note)}</textarea>
         <div class="toggle"><span>Aktiv (visas i dagens lista)</span><input type="checkbox" id="f-active" ${s.active ? 'checked' : ''}></div>
-        <div class="btns"><button class="btn" data-act="save">Spara</button>
-          ${id ? '<button class="btn danger" data-act="delete">Ta bort</button>' : ''}</div>
-      </div>`;
-    const keep = () => {
-      s.name = el.querySelector('#f-name').value; s.dose = el.querySelector('#f-dose').value;
-      s.note = el.querySelector('#f-note').value; s.active = el.querySelector('#f-active').checked;
-      el.querySelectorAll('[data-t]').forEach(i => times[+i.dataset.t] = i.value);
-    };
+      </div>
+      <div class="btns" style="margin-bottom:20px"><button class="btn" data-act="save">Spara</button>
+        ${id ? '<button class="btn danger" data-act="delete">Ta bort</button>' : ''}</div>`;
+
     el.querySelector('[data-act=cancel]').onclick = () => show('list');
-    el.querySelector('[data-act=addtime]').onclick = () => { keep(); times.push(''); draw(); el.querySelector(`[data-t="${times.length - 1}"]`)?.focus(); };
-    el.querySelectorAll('[data-rm]').forEach(b => b.onclick = () => { keep(); times.splice(+b.dataset.rm, 1); draw(); });
+    el.querySelectorAll('[data-m]').forEach(b => b.onclick = () => {
+      keep(); const m = b.dataset.m;
+      times = times.includes(m) ? times.filter(t => t !== m) : [...times, m]; draw();
+    });
+    el.querySelector('[data-act=addmoment]').onclick = () => {
+      keep(); const name = el.querySelector('#f-newmoment').value.trim();
+      if (!name) return;
+      if (!data.moments.some(m => m.name === name)) { data.moments.push({ name, time: '' }); data.momentsAt = Date.now(); save(); }
+      if (!times.includes(name)) times.push(name);
+      draw();
+    };
     el.querySelectorAll('[data-day]').forEach(b => b.onclick = () => {
       keep(); const n = +b.dataset.day;
       days = days.includes(n) ? days.filter(d => d !== n) : [...days, n].sort(); draw();
     });
+    el.querySelector('[data-act=parse]').onclick = () => {
+      keep();
+      const parsed = parseContents(s.contents, s.name, s.dose);
+      if (!parsed.length) { toast('Hittade inga mängder i texten'); return; }
+      s.nutrients = parsed.map(n => ({ ...n, amount: String(n.amount).replace('.', ',') }));
+      draw(); toast(`${parsed.length} ämnen ifyllda – kontrollera dem`);
+    };
+    el.querySelector('[data-act=addn]').onclick = () => { keep(); s.nutrients.push({ name: '', amount: '', unit: 'mg' }); draw(); };
+    el.querySelectorAll('[data-rmn]').forEach(b => b.onclick = () => { keep(); s.nutrients.splice(+b.dataset.rmn, 1); draw(); });
     el.querySelector('[data-act=save]').onclick = () => {
       keep();
       const name = s.name.trim();
       if (!name) { toast('Ange ett namn'); el.querySelector('#f-name').focus(); return; }
       if (!days.length) { toast('Välj minst en dag'); return; }
-      const cleanTimes = [...new Set(times.filter(Boolean))].sort();
-      const rec = { ...s, id: id || uid(), name, dose: s.dose.trim(), note: s.note.trim(), times: cleanTimes, days, deleted: false, createdAt: s.createdAt || Date.now(), updatedAt: Date.now() };
+      const nutrients = s.nutrients.filter(n => n.name.trim() && num(n.amount) > 0)
+        .map(n => ({ k: nutrientKeyFor(n.name), name: n.name.trim(), amount: num(n.amount), unit: n.unit }));
+      const rec = { ...s, id: id || uid(), name, dose: s.dose.trim(), brand: s.brand.trim(), url: s.url.trim(), contents: s.contents.trim(),
+        note: s.note.trim(), nutrients, times: data.moments.map(m => m.name).filter(m => times.includes(m)), days,
+        deleted: false, createdAt: s.createdAt || Date.now(), updatedAt: Date.now() };
       data.supplements[rec.id] = rec;
       save(); toast('Sparat'); show('list');
     };
     el.querySelector('[data-act=delete]')?.addEventListener('click', () => {
-      if (!confirm(`Ta bort ${s.name}? Historiken för tillskottet sparas inte i listan.`)) return;
+      if (!confirm(`Ta bort ${s.name}?`)) return;
       data.supplements[id] = { id, deleted: true, updatedAt: Date.now() };
       save(); toast('Borttaget'); show('list');
     });
@@ -416,28 +683,92 @@ function streak() {
   // Dagens dag räknas bara om allt redan är taget
   const t = dayStats(d);
   if (!(t.total && t.done >= t.total)) d.setDate(d.getDate() - 1);
-  for (let i = 0; i < 3650; i++) {
+  const first = firstLogDay();
+  for (let i = 0; i < 3650 && dateKey(d) >= first; i++) {
     const { total, done } = dayStats(d);
-    if (total === 0) { d.setDate(d.getDate() - 1); continue; }
-    if (done < total) break;
-    n++; d.setDate(d.getDate() - 1);
-    if (dateKey(d) < firstLogDay()) break;
+    if (total && done < total) break;
+    if (total) n++;
+    d.setDate(d.getDate() - 1);
   }
   return n;
 }
 function firstLogDay() { return Object.keys(data.log).sort()[0] || dateKey(new Date()); }
 
+// ---------- Import från kalkylark ----------
+function parseTSV(text) {
+  const rows = []; let row = [], cell = '', q = false;
+  text = text.replace(/\r\n?/g, '\n');
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (q) {
+      if (c === '"') { if (text[i + 1] === '"') { cell += '"'; i++; } else q = false; }
+      else cell += c;
+    } else if (c === '"' && cell === '') q = true;
+    else if (c === '\t') { row.push(cell); cell = ''; }
+    else if (c === '\n') { row.push(cell); rows.push(row); row = []; cell = ''; }
+    else cell += c;
+  }
+  row.push(cell); rows.push(row);
+  return rows.map(r => r.map(c => c.trim())).filter(r => r.some(Boolean));
+}
+function rowsToSupps(text) {
+  const rows = parseTSV(text);
+  if (!rows.length) return [];
+  const head = rows[0].map(h => h.toLowerCase());
+  const col = { contents: -1, time: -1, name: -1, dose: -1, brand: -1, url: -1 };
+  const tests = [['contents', /innehåll|ingrediens/], ['url', /beställ|länk|url|köp/], ['brand', /märke|brand|tillverkare/],
+    ['time', /tidpunkt|^tid|när|moment/], ['name', /kosttillskott|tillskott|namn|produkt/], ['dose', /mängd|dos|antal/]];
+  for (const [f, rx] of tests) col[f] = head.findIndex((h, i) => rx.test(h) && !Object.values(col).includes(i));
+  let body = rows;
+  if (col.name >= 0) body = rows.slice(1);
+  else Object.assign(col, { time: 0, name: 1, dose: 2, contents: 3, brand: 4, url: 5 }); // utan rubrikrad: samma ordning som mallen
+  const get = (r, f) => col[f] >= 0 ? (r[col[f]] || '') : '';
+  return body.filter(r => get(r, 'name')).map(r => {
+    const name = get(r, 'name'), dose = get(r, 'dose'), contents = get(r, 'contents');
+    return { name, dose, contents, brand: get(r, 'brand'), url: get(r, 'url'), time: get(r, 'time'),
+      nutrients: parseContents(contents, name, dose) };
+  });
+}
+function importSupps(list) {
+  let added = 0, updated = 0;
+  for (const r of list) {
+    if (r.time && !data.moments.some(m => m.name === r.time)) { data.moments.push({ name: r.time, time: '' }); data.momentsAt = Date.now(); }
+    const times = r.time ? [r.time] : [];
+    const existing = Object.values(data.supplements).find(s => !s.deleted && s.name.toLowerCase() === r.name.toLowerCase()
+      && (s.times || []).join() === times.join());
+    const base = existing || { id: uid(), days: [0, 1, 2, 3, 4, 5, 6], note: '', active: true, createdAt: Date.now() };
+    data.supplements[base.id] = { ...base, name: r.name, dose: r.dose, contents: r.contents, brand: r.brand, url: r.url,
+      nutrients: r.nutrients, times, deleted: false, updatedAt: Date.now() };
+    existing ? updated++ : added++;
+  }
+  save();
+  return { added, updated };
+}
+
 function renderSettings() {
   const el = document.getElementById('view-settings');
   const perm = 'Notification' in window ? Notification.permission : 'unsupported';
   const standalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  let moments = data.moments.map(m => ({ ...m, orig: m.name }));
   el.innerHTML = `<h2>Inställningar</h2>
+    <div class="card"><h3>Tidpunkter</h3>
+      <p class="muted" style="margin-top:0">Ordningen här är ordningen på Idag. Med ett klockslag får du en påminnelse.</p>
+      <div id="s-moments"></div>
+      <div class="btns"><button class="btn ghost small" data-act="addm">+ Tidpunkt</button><button class="btn small" data-act="savem">Spara tidpunkter</button></div>
+    </div>
     <div class="card"><h3>Påminnelser</h3>
       <div class="toggle"><span>Notis när det är dags</span><input type="checkbox" id="s-notify" ${data.settings.notify ? 'checked' : ''}></div>
-      <p class="muted">Påminnelsen visas när appen är öppen och en tidpunkt passeras med otagna tillskott – som notis om du tillåtit det, annars som en gul ruta på Idag-fliken.
+      <p class="muted">Påminnelsen kommer när appen är öppen och en tidpunkts klockslag passeras med otagna tillskott – som notis om du tillåtit det, annars som en gul ruta på Idag-fliken.
       ${perm === 'unsupported' && !standalone ? '<br><b>På iPhone:</b> lägg till appen på hemskärmen (Dela → Lägg till på hemskärmen) och öppna den därifrån för att kunna få notiser.' : ''}
       ${perm === 'denied' ? '<br>Notiser är blockerade för appen. Ändra det i telefonens inställningar.' : ''}</p>
       <div class="btns"><button class="btn secondary small" data-act="testnotify">Testa notis</button></div>
+    </div>
+    <div class="card"><h3>Klistra in en lista</h3>
+      <p class="muted" style="margin-top:0">Markera raderna i Excel eller Numbers (gärna med rubrikraden) och klistra in här. Kolumner som känns igen:
+      Tidpunkt, Kosttillskott, Mängd, Innehållsförteckning per dos, Märke, Beställ ifrån. Finns tillskottet redan på samma tidpunkt uppdateras det.</p>
+      <textarea id="s-paste" placeholder="Klistra in här"></textarea>
+      <div class="btns"><button class="btn secondary small" data-act="preview">Förhandsgranska</button></div>
+      <div id="s-preview"></div>
     </div>
     <div class="card"><h3>Synk mellan enheter (GitHub Gist)</h3>
       ${sync.token ? `<p class="muted">Kopplad${sync.gistId ? ` till gist <code>${esc(sync.gistId.slice(0, 8))}…</code>` : ''}.
@@ -445,7 +776,7 @@ function renderSettings() {
         <div class="btns"><button class="btn small" data-act="syncnow">Synka nu</button>
         <button class="btn danger small" data-act="disconnect">Koppla från</button></div>`
       : `<p class="muted">Datan sparas i en privat gist på ditt GitHub-konto. Skapa en token på
-        <a href="https://github.com/settings/tokens/new?scopes=gist&description=Tillskott-appen" target="_blank" rel="noopener">github.com/settings/tokens</a>
+        <a href="https://github.com/settings/tokens/new?scopes=gist&description=Dosa-appen" target="_blank" rel="noopener">github.com/settings/tokens</a>
         med bara behörigheten <b>gist</b>, och klistra in den här. Gör samma sak på varje enhet – appen hittar själv rätt gist.</p>
         <label for="s-token">Token</label><input type="password" id="s-token" placeholder="ghp_…" autocomplete="off">
         <div class="btns"><button class="btn small" data-act="connect">Koppla</button></div>`}
@@ -457,6 +788,37 @@ function renderSettings() {
       <input type="file" id="s-file" accept="application/json,.json" class="hidden">
     </div>
     <p class="muted">Appen håller bara ordning på det du själv lägger in. Den ger inga råd om doser – fråga vården eller apoteket om du är osäker.</p>`;
+
+  const mBox = el.querySelector('#s-moments');
+  const keepM = () => mBox.querySelectorAll('.mrow').forEach((r, i) => {
+    moments[i].name = r.querySelector('[data-mn]').value; moments[i].time = r.querySelector('[data-mt]').value;
+  });
+  const drawM = () => {
+    mBox.innerHTML = moments.length ? moments.map((m, i) => `<div class="mrow">
+      <input type="text" data-mn value="${esc(m.name)}" placeholder="Namn"><input type="time" data-mt value="${esc(m.time)}">
+      <button class="iconbtn" data-up="${i}" aria-label="Flytta upp" ${i ? '' : 'disabled style="opacity:.3"'}>↑</button>
+      <button class="iconbtn" data-down="${i}" aria-label="Flytta ner" ${i < moments.length - 1 ? '' : 'disabled style="opacity:.3"'}>↓</button>
+      <button class="iconbtn" data-rmm="${i}" aria-label="Ta bort">×</button></div>`).join('') : '<p class="muted">Inga tidpunkter än.</p>';
+    mBox.querySelectorAll('[data-up]').forEach(b => b.onclick = () => { keepM(); const i = +b.dataset.up; [moments[i - 1], moments[i]] = [moments[i], moments[i - 1]]; drawM(); });
+    mBox.querySelectorAll('[data-down]').forEach(b => b.onclick = () => { keepM(); const i = +b.dataset.down; [moments[i + 1], moments[i]] = [moments[i], moments[i + 1]]; drawM(); });
+    mBox.querySelectorAll('[data-rmm]').forEach(b => b.onclick = () => {
+      keepM(); const m = moments[+b.dataset.rmm];
+      const users = activeSupps().filter(s => (s.times || []).includes(m.orig));
+      if (users.length) { toast(`Används av ${users.map(s => s.name).join(', ')}`); return; }
+      moments.splice(+b.dataset.rmm, 1); drawM();
+    });
+  };
+  drawM();
+  el.querySelector('[data-act=addm]').onclick = () => { keepM(); moments.push({ name: '', time: '', orig: null }); drawM(); mBox.querySelector('.mrow:last-child [data-mn]').focus(); };
+  el.querySelector('[data-act=savem]').onclick = () => {
+    keepM();
+    moments = moments.filter(m => m.name.trim()).map(m => ({ ...m, name: m.name.trim() }));
+    if (new Set(moments.map(m => m.name)).size !== moments.length) { toast('Två tidpunkter har samma namn'); return; }
+    for (const m of moments) if (m.orig && m.orig !== m.name) renameMoment(m.orig, m.name);
+    data.moments = moments.map(({ name, time }) => ({ name, time }));
+    data.momentsAt = Date.now();
+    save(); toast('Tidpunkter sparade'); renderSettings();
+  };
 
   el.querySelector('#s-notify').onchange = async e => {
     data.settings.notify = e.target.checked;
@@ -471,6 +833,22 @@ function renderSettings() {
     if (!ok) toast('Notiser är inte tillgängliga här – påminnelsen visas i appen i stället');
     renderSettings();
   };
+
+  let pending = [];
+  el.querySelector('[data-act=preview]').onclick = () => {
+    pending = rowsToSupps(el.querySelector('#s-paste').value);
+    const box = el.querySelector('#s-preview');
+    if (!pending.length) { box.innerHTML = '<p class="muted">Hittade inga rader med ett tillskottsnamn.</p>'; return; }
+    box.innerHTML = `<div class="preview">${pending.map(r => `<div><b>${esc(r.name)}</b> <span class="muted">${esc([r.time, r.dose].filter(Boolean).join(' · '))}</span>
+      <div class="muted" style="font-size:13px">${r.nutrients.length ? r.nutrients.map(n => `${esc(n.name)} ${fmt(n.amount)} ${n.unit}`).join(', ') : 'Inget innehåll tolkat'}</div></div>`).join('')}</div>
+      <div class="btns"><button class="btn small" data-act="doimport">Lägg in ${pending.length} tillskott</button></div>`;
+    box.querySelector('[data-act=doimport]').onclick = () => {
+      const { added, updated } = importSupps(pending);
+      toast(`${added} nya${updated ? `, ${updated} uppdaterade` : ''}`);
+      show('today');
+    };
+  };
+
   el.querySelector('[data-act=connect]')?.addEventListener('click', async () => {
     const token = el.querySelector('#s-token').value.trim();
     if (!token) { toast('Klistra in en token'); return; }
@@ -495,21 +873,37 @@ function renderSettings() {
     try {
       const incoming = JSON.parse(await f.text());
       if (!incoming.supplements || !incoming.log) throw new Error();
-      data = merge(data, incoming); save(); toast('Importerat'); render();
+      data = merge(data, incoming); normalize(); save(); toast('Importerat'); render();
     } catch { toast('Filen kunde inte läsas'); }
   };
 }
 
+function renameMoment(from, to) {
+  for (const s of Object.values(data.supplements)) {
+    if (s.deleted || !(s.times || []).includes(from)) continue;
+    s.times = s.times.map(t => t === from ? to : t); s.updatedAt = Date.now();
+  }
+  for (const entries of Object.values(data.log)) {
+    for (const k of Object.keys(entries)) if (k.endsWith('@' + from)) {
+      entries[k.slice(0, -from.length) + to] = entries[k];
+      entries[k] = { v: false, t: entries[k].t + 1 };
+    }
+  }
+  const n = lsGet(NOTIFIED_KEY, null);
+  if (n?.slots) { n.slots = n.slots.map(s => s === from ? to : s); lsSet(NOTIFIED_KEY, n); }
+}
+
 // ---------- Påminnelser ----------
+function minutesOf(hhmm) { const [h, m] = hhmm.split(':').map(Number); return h * 60 + m; }
 function dueUntaken() {
-  // Otagna tillskott vars tid passerats inom de senaste 3 timmarna
+  // Otagna tillskott vars tidpunkt passerats inom de senaste 3 timmarna
   const now = new Date();
   const dk = dateKey(now);
   const mins = now.getHours() * 60 + now.getMinutes();
   return scheduledFor(now).filter(i => {
-    if (i.time === '—' || isTaken(dk, i.key)) return false;
-    const [h, m] = i.time.split(':').map(Number);
-    const diff = mins - (h * 60 + m);
+    const clock = momentTime(i.time);
+    if (!clock || isTaken(dk, i.key)) return false;
+    const diff = mins - minutesOf(clock);
     return diff >= 0 && diff <= 180;
   });
 }
@@ -517,7 +911,7 @@ async function notify(title, body) {
   if (!('Notification' in window) || Notification.permission !== 'granted') return false;
   try {
     const reg = await navigator.serviceWorker?.getRegistration();
-    if (reg) await reg.showNotification(title, { body, icon: 'icon-180.png', tag: 'tillskott' });
+    if (reg) await reg.showNotification(title, { body, icon: 'icon-180.png', tag: 'dosa' });
     else new Notification(title, { body, icon: 'icon-180.png' });
     return true;
   } catch { return false; }
@@ -531,13 +925,10 @@ function checkReminders() {
   if (notified.day !== dk) { notified.day = dk; notified.slots = []; }
   const mins = now.getHours() * 60 + now.getMinutes();
   // Notis bara för tidpunkter som just passerats (senaste 30 min), en gång per tidpunkt och dag
-  const fresh = dueUntaken().filter(i => {
-    const [h, m] = i.time.split(':').map(Number);
-    return mins - (h * 60 + m) <= 30 && !notified.slots.includes(i.time);
-  });
+  const fresh = dueUntaken().filter(i => mins - minutesOf(momentTime(i.time)) <= 30 && !notified.slots.includes(i.time));
   if (!fresh.length) return;
   const slots = [...new Set(fresh.map(i => i.time))];
-  notify(`Dags för tillskott (${slots.join(', ')})`, fresh.map(i => i.s.name + (i.s.dose ? ` – ${i.s.dose}` : '')).join('\n'));
+  notify(`Dags: ${slots.join(', ')}`, fresh.map(i => i.s.name + (i.s.dose ? ` – ${i.s.dose}` : '')).join('\n'));
   if (document.visibilityState === 'visible') toast('Dags för: ' + fresh.map(i => i.s.name).join(', '));
   notified.slots.push(...slots);
   lsSet(NOTIFIED_KEY, notified);
@@ -545,7 +936,7 @@ function checkReminders() {
 
 // ---------- Synk ----------
 function merge(a, b) {
-  const out = { supplements: { ...a.supplements }, log: {}, settings: a.settings || b.settings || { notify: false } };
+  const out = { supplements: { ...a.supplements }, log: {}, settings: a.settings || { notify: false } };
   for (const [id, s] of Object.entries(b.supplements || {})) {
     if (!out.supplements[id] || (s.updatedAt || 0) > (out.supplements[id].updatedAt || 0)) out.supplements[id] = s;
   }
@@ -557,6 +948,9 @@ function merge(a, b) {
       }
     }
   }
+  const bNewer = (b.momentsAt || 0) > (a.momentsAt || 0);
+  out.moments = (bNewer ? b.moments : a.moments) || [];
+  out.momentsAt = Math.max(a.momentsAt || 0, b.momentsAt || 0);
   return out;
 }
 async function gh(path, opts = {}) {
@@ -584,7 +978,7 @@ async function findGist() {
 }
 function payload() {
   const { settings, ...rest } = data; // inställningar är per enhet
-  return JSON.stringify({ ...rest, app: 'tillskott', version: 1 });
+  return JSON.stringify({ ...rest, app: 'tillskott', version: 2 });
 }
 let syncing = false, syncError = '', syncTimer = null, syncAgain = false;
 function scheduleSync() {
@@ -608,10 +1002,11 @@ async function doSync(manual) {
       } catch (e) { if (e.missing) sync.gistId = ''; else throw e; }
     }
     if (remote) {
-      const before = JSON.stringify([data.supplements, data.log]);
+      const before = JSON.stringify([data.supplements, data.log, data.moments]);
       data = merge(data, remote);
+      normalize();
       save(false);
-      if (JSON.stringify([data.supplements, data.log]) !== before) render();
+      if (JSON.stringify([data.supplements, data.log, data.moments]) !== before && currentView !== 'edit' && currentView !== 'settings') render();
     }
     const body = JSON.stringify({ description: GIST_DESC, files: { [GIST_FILE]: { content: payload() } } });
     if (sync.gistId) await gh(`/gists/${sync.gistId}`, { method: 'PATCH', body });
@@ -645,13 +1040,13 @@ function toast(msg) {
   clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
 }
 
-document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState !== 'visible') return;
-  if (currentView === 'today' && dateKey(viewDate) !== dateKey(new Date()) && Date.now() - lastActive > 30 * 60e3) viewDate = new Date();
-  render(); checkReminders(); if (sync.token) doSync(false);
-});
 let lastActive = Date.now();
-document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') lastActive = Date.now(); });
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') { lastActive = Date.now(); return; }
+  if (Date.now() - lastActive > 30 * 60e3) viewDate = new Date();
+  if (currentView !== 'edit' && currentView !== 'settings') render();
+  checkReminders(); if (sync.token) doSync(false);
+});
 
 if ('serviceWorker' in navigator && location.protocol !== 'file:') navigator.serviceWorker.register('sw.js').catch(() => {});
 
