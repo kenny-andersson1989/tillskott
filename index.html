@@ -1,0 +1,663 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tillskott</title>
+<meta name="theme-color" content="#2f7d5b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Tillskott">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<style>
+:root {
+  --bg: #f4f6f4; --card: #ffffff; --text: #1d2420; --muted: #66706a; --line: #dfe4e0;
+  --accent: #2f7d5b; --accent-soft: #e2f1e9; --warn: #b4561f; --warn-soft: #fbeee4; --danger: #b3261e;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #121614; --card: #1c211e; --text: #e6ebe7; --muted: #9aa49e; --line: #2c332f;
+    --accent: #5fbf8f; --accent-soft: #1f3529; --warn: #e89a63; --warn-soft: #3a2a1f; --danger: #f28b82; }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--text);
+  font: 16px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-text-size-adjust: 100%; }
+body { padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
+header { position: sticky; top: 0; z-index: 5; background: var(--bg); padding: calc(10px + env(safe-area-inset-top)) 16px 8px;
+  display: flex; align-items: center; justify-content: space-between; gap: 8px; border-bottom: 1px solid var(--line); }
+header h1 { font-size: 20px; margin: 0; }
+#syncState { font-size: 13px; color: var(--muted); }
+main { max-width: 640px; margin: 0 auto; padding: 12px 16px; }
+nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 5; display: flex; background: var(--card);
+  border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom); }
+nav button { flex: 1; border: 0; background: none; color: var(--muted); padding: 10px 4px 12px; font: inherit; font-size: 13px; }
+nav button span { display: block; font-size: 20px; line-height: 1.2; }
+nav button.on { color: var(--accent); font-weight: 600; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; margin-bottom: 12px; }
+h2 { font-size: 17px; margin: 4px 0 10px; }
+h3 { font-size: 15px; margin: 0 0 6px; color: var(--muted); font-weight: 600; }
+.muted { color: var(--muted); font-size: 14px; }
+.row { display: flex; align-items: center; gap: 10px; }
+.between { justify-content: space-between; }
+.daynav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.daynav strong { font-size: 17px; }
+.iconbtn { border: 1px solid var(--line); background: var(--card); color: var(--text); border-radius: 10px;
+  min-width: 40px; height: 40px; font-size: 18px; }
+.progress { height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; margin: 6px 0 2px; }
+.progress div { height: 100%; background: var(--accent); width: 0; transition: width .2s; }
+.slot { margin-bottom: 12px; }
+.slot-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+.slot-head .time { font-weight: 700; font-size: 16px; }
+.item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--line); cursor: pointer; user-select: none; }
+.item:first-of-type { border-top: 0; }
+.check { flex: none; width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--line);
+  display: grid; place-items: center; color: transparent; font-size: 16px; font-weight: 700; }
+.item.done .check { background: var(--accent); border-color: var(--accent); color: #fff; }
+.item.done .name { text-decoration: line-through; color: var(--muted); }
+.item .name { font-weight: 600; }
+.item .sub { font-size: 13px; color: var(--muted); }
+.banner { background: var(--warn-soft); color: var(--warn); border-radius: 10px; padding: 10px 12px; margin-bottom: 12px; font-size: 14px; }
+.btn { border: 0; border-radius: 10px; padding: 11px 16px; font: inherit; font-weight: 600; background: var(--accent); color: #fff; }
+.btn.secondary { background: var(--accent-soft); color: var(--accent); }
+.btn.ghost { background: none; border: 1px solid var(--line); color: var(--text); }
+.btn.danger { background: none; border: 1px solid var(--line); color: var(--danger); }
+.btn.small { padding: 7px 12px; font-size: 14px; }
+.btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+label { display: block; font-size: 14px; font-weight: 600; margin: 10px 0 4px; }
+input[type=text], input[type=password], input[type=time], textarea, select {
+  width: 100%; font: inherit; font-size: 16px; padding: 10px; border-radius: 10px; border: 1px solid var(--line);
+  background: var(--bg); color: var(--text); }
+textarea { min-height: 60px; resize: vertical; }
+.times { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.times .t { display: flex; align-items: center; gap: 4px; }
+.times input { width: 120px; }
+.days { display: flex; gap: 4px; flex-wrap: wrap; }
+.days button { flex: 1; min-width: 40px; padding: 8px 0; border-radius: 8px; border: 1px solid var(--line);
+  background: var(--bg); color: var(--muted); font: inherit; font-size: 14px; }
+.days button.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.supp { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid var(--line); }
+.supp:first-of-type { border-top: 0; }
+.supp.paused .name { color: var(--muted); }
+.pill { display: inline-block; font-size: 12px; padding: 1px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); margin-left: 6px; font-weight: 600; }
+.pill.grey { background: var(--line); color: var(--muted); }
+.hist { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.hist div { aspect-ratio: 1; border-radius: 6px; display: grid; place-items: center; font-size: 12px; background: var(--line); color: var(--muted); cursor: pointer; }
+.hist .wd { aspect-ratio: auto; background: none; font-weight: 600; cursor: default; }
+.hist .empty { background: none; cursor: default; }
+.hist .p1 { background: color-mix(in srgb, var(--accent) 30%, var(--line)); color: var(--text); }
+.hist .p2 { background: color-mix(in srgb, var(--accent) 60%, var(--line)); color: #fff; }
+.hist .p3 { background: var(--accent); color: #fff; }
+.hist .today { outline: 2px solid var(--text); outline-offset: -2px; }
+.toggle { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 8px 0; font-weight: 600; font-size: 15px; }
+.toggle input { width: 22px; height: 22px; }
+.empty-state { text-align: center; padding: 28px 10px; color: var(--muted); }
+#toast { position: fixed; left: 50%; bottom: calc(84px + env(safe-area-inset-bottom)); transform: translateX(-50%);
+  background: var(--text); color: var(--bg); padding: 9px 16px; border-radius: 999px; font-size: 14px; opacity: 0; pointer-events: none; transition: opacity .2s; z-index: 20; max-width: 90vw; }
+#toast.show { opacity: 1; }
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Tillskott</h1>
+  <button id="syncState" class="iconbtn" style="min-width:auto;padding:0 10px;height:32px;font-size:13px" title="Synka nu">Ej synkad</button>
+</header>
+<main>
+  <section id="view-today"></section>
+  <section id="view-list" class="hidden"></section>
+  <section id="view-history" class="hidden"></section>
+  <section id="view-settings" class="hidden"></section>
+  <section id="view-edit" class="hidden"></section>
+</main>
+<nav>
+  <button data-view="today" class="on"><span>✓</span>Idag</button>
+  <button data-view="list"><span>💊</span>Tillskott</button>
+  <button data-view="history"><span>📅</span>Historik</button>
+  <button data-view="settings"><span>⚙︎</span>Inställningar</button>
+</nav>
+<div id="toast"></div>
+
+<script>
+'use strict';
+
+// ---------- Lagring ----------
+const STORE_KEY = 'tillskott.data.v1';
+const SYNC_KEY = 'tillskott.sync.v1';
+const NOTIFIED_KEY = 'tillskott.notified';
+const GIST_FILE = 'tillskott.json';
+const GIST_DESC = 'Tillskott – appdata (skapad av Tillskott-appen)';
+const WEEKDAYS = ['Mån', 'Tis', 'Ons', 'Tor', 'Fre', 'Lör', 'Sön'];
+
+function lsGet(key, fallback) {
+  try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch { return fallback; }
+}
+function lsSet(key, value) {
+  try { localStorage.setItem(key, JSON.stringify(value)); } catch {}
+}
+
+// supplements: { id: {id, name, dose, times[], days[0..6], note, active, deleted, updatedAt} }
+// log: { 'YYYY-MM-DD': { 'id@HH:MM': {v: bool, t: ms} } }
+let data = lsGet(STORE_KEY, null) || { supplements: {}, log: {}, settings: { notify: false } };
+data.settings = data.settings || { notify: false };
+let sync = lsGet(SYNC_KEY, { token: '', gistId: '', lastSync: 0 });
+
+function save(changed = true) {
+  lsSet(STORE_KEY, data);
+  if (changed) scheduleSync();
+}
+
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const pad = n => String(n).padStart(2, '0');
+const dateKey = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const parseKey = k => { const [y, m, d] = k.split('-').map(Number); return new Date(y, m - 1, d); };
+const weekdayIdx = d => (d.getDay() + 6) % 7; // 0 = måndag
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+function activeSupps() {
+  return Object.values(data.supplements).filter(s => !s.deleted).sort((a, b) => a.name.localeCompare(b.name, 'sv'));
+}
+function scheduledFor(date) {
+  const wd = weekdayIdx(date);
+  const out = [];
+  for (const s of activeSupps()) {
+    if (!s.active) continue;
+    if (s.days && s.days.length && !s.days.includes(wd)) continue;
+    if (s.createdAt && dateKey(date) < dateKey(new Date(s.createdAt))) continue; // fanns inte än
+    for (const t of (s.times && s.times.length ? s.times : ['—'])) out.push({ s, time: t, key: `${s.id}@${t}` });
+  }
+  return out;
+}
+function isTaken(dk, key) { const e = data.log[dk]?.[key]; return !!(e && e.v); }
+function setTaken(dk, key, v) {
+  data.log[dk] = data.log[dk] || {};
+  data.log[dk][key] = { v, t: Date.now() };
+  save();
+}
+function dayStats(date) {
+  const dk = dateKey(date);
+  const items = scheduledFor(date);
+  const done = items.filter(i => isTaken(dk, i.key)).length;
+  return { total: items.length, done };
+}
+
+// ---------- Vyer ----------
+let currentView = 'today';
+let viewDate = new Date();
+
+function show(view) {
+  currentView = view;
+  for (const sec of document.querySelectorAll('main > section')) sec.classList.toggle('hidden', sec.id !== 'view-' + view);
+  for (const b of document.querySelectorAll('nav button')) b.classList.toggle('on', b.dataset.view === view || (view === 'edit' && b.dataset.view === 'list'));
+  render();
+  window.scrollTo(0, 0);
+}
+document.querySelectorAll('nav button').forEach(b => b.addEventListener('click', () => {
+  if (b.dataset.view === 'today') viewDate = new Date();
+  show(b.dataset.view);
+}));
+
+function render() {
+  if (currentView === 'today') renderToday();
+  else if (currentView === 'list') renderList();
+  else if (currentView === 'history') renderHistory();
+  else if (currentView === 'settings') renderSettings();
+  renderSyncState();
+}
+
+function dayLabel(date) {
+  const today = dateKey(new Date());
+  const dk = dateKey(date);
+  const y = new Date(); y.setDate(y.getDate() - 1);
+  if (dk === today) return 'Idag';
+  if (dk === dateKey(y)) return 'Igår';
+  return date.toLocaleDateString('sv-SE', { weekday: 'long', day: 'numeric', month: 'short' });
+}
+
+function renderToday() {
+  const el = document.getElementById('view-today');
+  const dk = dateKey(viewDate);
+  const isToday = dk === dateKey(new Date());
+  const items = scheduledFor(viewDate);
+  const { total, done } = dayStats(viewDate);
+
+  let html = `<div class="daynav">
+    <button class="iconbtn" data-act="prev" aria-label="Föregående dag">‹</button>
+    <div style="text-align:center"><strong>${esc(dayLabel(viewDate))}</strong>
+      <div class="muted">${viewDate.toLocaleDateString('sv-SE', { day: 'numeric', month: 'long', year: 'numeric' })}</div></div>
+    <button class="iconbtn" data-act="next" aria-label="Nästa dag" ${isToday ? 'disabled style="opacity:.3"' : ''}>›</button>
+  </div>`;
+
+  if (!activeSupps().length) {
+    html += `<div class="card empty-state">Du har inga tillskott inlagda än.<div class="btns" style="justify-content:center">
+      <button class="btn" data-act="add">Lägg till tillskott</button></div></div>`;
+    el.innerHTML = html; bindToday(el); return;
+  }
+  if (!items.length) {
+    html += `<div class="card empty-state">Inget schemalagt den här dagen.</div>`;
+    el.innerHTML = html; bindToday(el); return;
+  }
+
+  html += `<div class="card"><div class="row between"><strong>${done} av ${total} tagna</strong>
+    <span class="muted">${total ? Math.round(done / total * 100) : 0} %</span></div>
+    <div class="progress"><div style="width:${total ? done / total * 100 : 0}%"></div></div></div>`;
+
+  if (isToday) {
+    const due = dueUntaken();
+    if (due.length) html += `<div class="banner">Dags nu: ${due.map(i => esc(i.s.name)).join(', ')}</div>`;
+  }
+
+  const slots = {};
+  for (const i of items) (slots[i.time] = slots[i.time] || []).push(i);
+  for (const t of Object.keys(slots).sort()) {
+    const list = slots[t];
+    const n = list.filter(i => isTaken(dk, i.key)).length;
+    html += `<div class="card slot"><div class="slot-head"><span class="time">${t === '—' ? 'Ingen tid' : esc(t)}</span>
+      <span class="muted">${n}/${list.length} ${list.length > 1 && n < list.length ? `· <a href="#" data-all="${esc(t)}" style="color:var(--accent)">bocka alla</a>` : ''}</span></div>`;
+    for (const i of list) {
+      const taken = data.log[dk]?.[i.key];
+      const when = taken?.v ? new Date(taken.t) : null;
+      const sub = [i.s.dose, when && dateKey(when) === dk ? 'tagen ' + when.toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' }) : '']
+        .filter(Boolean).join(' · ');
+      html += `<div class="item ${taken?.v ? 'done' : ''}" data-key="${esc(i.key)}">
+        <div class="check">✓</div>
+        <div><div class="name">${esc(i.s.name)}</div>${sub ? `<div class="sub">${esc(sub)}</div>` : ''}
+        ${i.s.note ? `<div class="sub">${esc(i.s.note)}</div>` : ''}</div></div>`;
+    }
+    html += `</div>`;
+  }
+  el.innerHTML = html;
+  bindToday(el);
+}
+function bindToday(el) {
+  el.querySelector('[data-act=prev]')?.addEventListener('click', () => { viewDate.setDate(viewDate.getDate() - 1); renderToday(); });
+  el.querySelector('[data-act=next]')?.addEventListener('click', () => {
+    if (dateKey(viewDate) === dateKey(new Date())) return;
+    viewDate.setDate(viewDate.getDate() + 1); renderToday();
+  });
+  el.querySelector('[data-act=add]')?.addEventListener('click', () => openEdit(null));
+  el.querySelectorAll('.item').forEach(it => it.addEventListener('click', () => {
+    const dk = dateKey(viewDate);
+    setTaken(dk, it.dataset.key, !isTaken(dk, it.dataset.key));
+    renderToday();
+  }));
+  el.querySelectorAll('[data-all]').forEach(a => a.addEventListener('click', e => {
+    e.preventDefault();
+    const dk = dateKey(viewDate);
+    for (const i of scheduledFor(viewDate)) if (i.time === a.dataset.all && !isTaken(dk, i.key)) setTaken(dk, i.key, true);
+    renderToday();
+  }));
+}
+
+function renderList() {
+  const el = document.getElementById('view-list');
+  const supps = activeSupps();
+  let html = `<div class="row between" style="margin-bottom:10px"><h2 style="margin:0">Mina tillskott</h2>
+    <button class="btn small" data-act="add">+ Lägg till</button></div>`;
+  if (!supps.length) {
+    html += `<div class="card empty-state">Inga tillskott än. Tryck på <b>Lägg till</b> för att börja.</div>`;
+  } else {
+    html += `<div class="card">`;
+    for (const s of supps) {
+      const days = !s.days || !s.days.length || s.days.length === 7 ? 'Varje dag' : s.days.map(d => WEEKDAYS[d]).join(', ');
+      html += `<div class="supp ${s.active ? '' : 'paused'}" data-id="${s.id}">
+        <div><div class="name"><b>${esc(s.name)}</b>${s.active ? '' : '<span class="pill grey">Pausad</span>'}</div>
+        <div class="muted">${[s.dose, (s.times || []).join(', '), days].filter(Boolean).map(esc).join(' · ')}</div></div>
+        <button class="btn ghost small">Ändra</button></div>`;
+    }
+    html += `</div>`;
+  }
+  el.innerHTML = html;
+  el.querySelector('[data-act=add]').addEventListener('click', () => openEdit(null));
+  el.querySelectorAll('.supp').forEach(r => r.addEventListener('click', () => openEdit(r.dataset.id)));
+}
+
+function openEdit(id) {
+  const s = id ? data.supplements[id] : { id: null, name: '', dose: '', times: ['08:00'], days: [0, 1, 2, 3, 4, 5, 6], note: '', active: true };
+  const el = document.getElementById('view-edit');
+  let times = [...(s.times || [])];
+  let days = s.days && s.days.length ? [...s.days] : [0, 1, 2, 3, 4, 5, 6];
+
+  const draw = () => {
+    el.innerHTML = `<div class="row between" style="margin-bottom:10px"><h2 style="margin:0">${id ? 'Ändra tillskott' : 'Nytt tillskott'}</h2>
+      <button class="btn ghost small" data-act="cancel">Avbryt</button></div>
+      <div class="card">
+        <label for="f-name">Namn</label><input type="text" id="f-name" value="${esc(s.name)}" placeholder="t.ex. D-vitamin" autocomplete="off">
+        <label for="f-dose">Dos / mängd (som du själv anger)</label><input type="text" id="f-dose" value="${esc(s.dose)}" placeholder="t.ex. 1 kapsel" autocomplete="off">
+        <label>Tidpunkter</label>
+        <div class="times">${times.map((t, n) => `<span class="t"><input type="time" value="${esc(t)}" data-t="${n}">
+          <button class="iconbtn" data-rm="${n}" aria-label="Ta bort tid">×</button></span>`).join('')}
+          <button class="btn secondary small" data-act="addtime">+ Tid</button></div>
+        <label>Dagar</label>
+        <div class="days">${WEEKDAYS.map((d, n) => `<button data-day="${n}" class="${days.includes(n) ? 'on' : ''}">${d}</button>`).join('')}</div>
+        <label for="f-note">Anteckning</label><textarea id="f-note" placeholder="t.ex. tas med mat">${esc(s.note)}</textarea>
+        <div class="toggle"><span>Aktiv (visas i dagens lista)</span><input type="checkbox" id="f-active" ${s.active ? 'checked' : ''}></div>
+        <div class="btns"><button class="btn" data-act="save">Spara</button>
+          ${id ? '<button class="btn danger" data-act="delete">Ta bort</button>' : ''}</div>
+      </div>`;
+    const keep = () => {
+      s.name = el.querySelector('#f-name').value; s.dose = el.querySelector('#f-dose').value;
+      s.note = el.querySelector('#f-note').value; s.active = el.querySelector('#f-active').checked;
+      el.querySelectorAll('[data-t]').forEach(i => times[+i.dataset.t] = i.value);
+    };
+    el.querySelector('[data-act=cancel]').onclick = () => show('list');
+    el.querySelector('[data-act=addtime]').onclick = () => { keep(); times.push(''); draw(); el.querySelector(`[data-t="${times.length - 1}"]`)?.focus(); };
+    el.querySelectorAll('[data-rm]').forEach(b => b.onclick = () => { keep(); times.splice(+b.dataset.rm, 1); draw(); });
+    el.querySelectorAll('[data-day]').forEach(b => b.onclick = () => {
+      keep(); const n = +b.dataset.day;
+      days = days.includes(n) ? days.filter(d => d !== n) : [...days, n].sort(); draw();
+    });
+    el.querySelector('[data-act=save]').onclick = () => {
+      keep();
+      const name = s.name.trim();
+      if (!name) { toast('Ange ett namn'); el.querySelector('#f-name').focus(); return; }
+      if (!days.length) { toast('Välj minst en dag'); return; }
+      const cleanTimes = [...new Set(times.filter(Boolean))].sort();
+      const rec = { ...s, id: id || uid(), name, dose: s.dose.trim(), note: s.note.trim(), times: cleanTimes, days, deleted: false, createdAt: s.createdAt || Date.now(), updatedAt: Date.now() };
+      data.supplements[rec.id] = rec;
+      save(); toast('Sparat'); show('list');
+    };
+    el.querySelector('[data-act=delete]')?.addEventListener('click', () => {
+      if (!confirm(`Ta bort ${s.name}? Historiken för tillskottet sparas inte i listan.`)) return;
+      data.supplements[id] = { id, deleted: true, updatedAt: Date.now() };
+      save(); toast('Borttaget'); show('list');
+    });
+  };
+  draw();
+  show('edit');
+}
+
+let histMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+function renderHistory() {
+  const el = document.getElementById('view-history');
+  const y = histMonth.getFullYear(), m = histMonth.getMonth();
+  const first = new Date(y, m, 1);
+  const daysIn = new Date(y, m + 1, 0).getDate();
+  const todayK = dateKey(new Date());
+  const now = new Date();
+  let cells = WEEKDAYS.map(d => `<div class="wd">${d[0]}</div>`).join('');
+  for (let i = 0; i < weekdayIdx(first); i++) cells += `<div class="empty"></div>`;
+  let sumDone = 0, sumTotal = 0, fullDays = 0, countedDays = 0;
+  for (let d = 1; d <= daysIn; d++) {
+    const date = new Date(y, m, d);
+    const dk = dateKey(date);
+    let cls = '';
+    if (date <= now) {
+      const { total, done } = dayStats(date);
+      if (total) {
+        const p = done / total;
+        cls = p >= 1 ? 'p3' : p >= .5 ? 'p2' : p > 0 ? 'p1' : '';
+        sumDone += done; sumTotal += total; countedDays++; if (p >= 1) fullDays++;
+      }
+    }
+    cells += `<div class="${cls} ${dk === todayK ? 'today' : ''}" data-day="${dk}">${d}</div>`;
+  }
+  const monthName = first.toLocaleDateString('sv-SE', { month: 'long', year: 'numeric' });
+  const atCurrent = y === now.getFullYear() && m === now.getMonth();
+  el.innerHTML = `<div class="daynav"><button class="iconbtn" data-act="prev">‹</button><strong style="text-transform:capitalize">${monthName}</strong>
+    <button class="iconbtn" data-act="next" ${atCurrent ? 'disabled style="opacity:.3"' : ''}>›</button></div>
+    <div class="card"><div class="hist">${cells}</div>
+    <p class="muted" style="margin:10px 0 0">Mörkare grön = större andel tagna. Tryck på en dag för att se eller ändra den.</p></div>
+    <div class="card"><div class="row between"><span>Tagna doser</span><b>${sumDone} av ${sumTotal}${sumTotal ? ` (${Math.round(sumDone / sumTotal * 100)} %)` : ''}</b></div>
+    <div class="row between" style="margin-top:6px"><span>Dagar med allt taget</span><b>${fullDays} av ${countedDays}</b></div>
+    <div class="row between" style="margin-top:6px"><span>Nuvarande svit</span><b>${streak()} dagar</b></div></div>`;
+  el.querySelector('[data-act=prev]').onclick = () => { histMonth = new Date(y, m - 1, 1); renderHistory(); };
+  el.querySelector('[data-act=next]').onclick = () => { if (!atCurrent) { histMonth = new Date(y, m + 1, 1); renderHistory(); } };
+  el.querySelectorAll('.hist [data-day]').forEach(c => c.onclick = () => {
+    const date = parseKey(c.dataset.day);
+    if (date > now) return;
+    viewDate = date; show('today');
+  });
+}
+function streak() {
+  const d = new Date();
+  let n = 0;
+  // Dagens dag räknas bara om allt redan är taget
+  const t = dayStats(d);
+  if (!(t.total && t.done >= t.total)) d.setDate(d.getDate() - 1);
+  for (let i = 0; i < 3650; i++) {
+    const { total, done } = dayStats(d);
+    if (total === 0) { d.setDate(d.getDate() - 1); continue; }
+    if (done < total) break;
+    n++; d.setDate(d.getDate() - 1);
+    if (dateKey(d) < firstLogDay()) break;
+  }
+  return n;
+}
+function firstLogDay() { return Object.keys(data.log).sort()[0] || dateKey(new Date()); }
+
+function renderSettings() {
+  const el = document.getElementById('view-settings');
+  const perm = 'Notification' in window ? Notification.permission : 'unsupported';
+  const standalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  el.innerHTML = `<h2>Inställningar</h2>
+    <div class="card"><h3>Påminnelser</h3>
+      <div class="toggle"><span>Notis när det är dags</span><input type="checkbox" id="s-notify" ${data.settings.notify ? 'checked' : ''}></div>
+      <p class="muted">Påminnelsen visas när appen är öppen och en tidpunkt passeras med otagna tillskott – som notis om du tillåtit det, annars som en gul ruta på Idag-fliken.
+      ${perm === 'unsupported' && !standalone ? '<br><b>På iPhone:</b> lägg till appen på hemskärmen (Dela → Lägg till på hemskärmen) och öppna den därifrån för att kunna få notiser.' : ''}
+      ${perm === 'denied' ? '<br>Notiser är blockerade för appen. Ändra det i telefonens inställningar.' : ''}</p>
+      <div class="btns"><button class="btn secondary small" data-act="testnotify">Testa notis</button></div>
+    </div>
+    <div class="card"><h3>Synk mellan enheter (GitHub Gist)</h3>
+      ${sync.token ? `<p class="muted">Kopplad${sync.gistId ? ` till gist <code>${esc(sync.gistId.slice(0, 8))}…</code>` : ''}.
+        ${sync.lastSync ? 'Senast synkad ' + new Date(sync.lastSync).toLocaleString('sv-SE') : ''}</p>
+        <div class="btns"><button class="btn small" data-act="syncnow">Synka nu</button>
+        <button class="btn danger small" data-act="disconnect">Koppla från</button></div>`
+      : `<p class="muted">Datan sparas i en privat gist på ditt GitHub-konto. Skapa en token på
+        <a href="https://github.com/settings/tokens/new?scopes=gist&description=Tillskott-appen" target="_blank" rel="noopener">github.com/settings/tokens</a>
+        med bara behörigheten <b>gist</b>, och klistra in den här. Gör samma sak på varje enhet – appen hittar själv rätt gist.</p>
+        <label for="s-token">Token</label><input type="password" id="s-token" placeholder="ghp_…" autocomplete="off">
+        <div class="btns"><button class="btn small" data-act="connect">Koppla</button></div>`}
+      <p class="muted" style="margin-bottom:0">Token sparas bara på den här enheten.</p>
+    </div>
+    <div class="card"><h3>Säkerhetskopia</h3>
+      <div class="btns" style="margin-top:0"><button class="btn ghost small" data-act="export">Exportera fil</button>
+      <button class="btn ghost small" data-act="import">Importera fil</button></div>
+      <input type="file" id="s-file" accept="application/json,.json" class="hidden">
+    </div>
+    <p class="muted">Appen håller bara ordning på det du själv lägger in. Den ger inga råd om doser – fråga vården eller apoteket om du är osäker.</p>`;
+
+  el.querySelector('#s-notify').onchange = async e => {
+    data.settings.notify = e.target.checked;
+    if (e.target.checked && 'Notification' in window && Notification.permission === 'default') {
+      try { await Notification.requestPermission(); } catch {}
+    }
+    save(false); renderSettings();
+  };
+  el.querySelector('[data-act=testnotify]').onclick = async () => {
+    if ('Notification' in window && Notification.permission === 'default') { try { await Notification.requestPermission(); } catch {} }
+    const ok = await notify('Tillskott', 'Så här ser en påminnelse ut.');
+    if (!ok) toast('Notiser är inte tillgängliga här – påminnelsen visas i appen i stället');
+    renderSettings();
+  };
+  el.querySelector('[data-act=connect]')?.addEventListener('click', async () => {
+    const token = el.querySelector('#s-token').value.trim();
+    if (!token) { toast('Klistra in en token'); return; }
+    sync = { token, gistId: '', lastSync: 0 }; lsSet(SYNC_KEY, sync);
+    await doSync(true); renderSettings();
+  });
+  el.querySelector('[data-act=syncnow]')?.addEventListener('click', async () => { await doSync(true); renderSettings(); });
+  el.querySelector('[data-act=disconnect]')?.addEventListener('click', () => {
+    if (!confirm('Koppla från synk på den här enheten? Datan i gisten och här finns kvar.')) return;
+    sync = { token: '', gistId: '', lastSync: 0 }; lsSet(SYNC_KEY, sync); renderSettings(); renderSyncState();
+  });
+  el.querySelector('[data-act=export]').onclick = () => {
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = `tillskott-${dateKey(new Date())}.json`; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  };
+  const file = el.querySelector('#s-file');
+  el.querySelector('[data-act=import]').onclick = () => file.click();
+  file.onchange = async () => {
+    const f = file.files[0]; if (!f) return;
+    try {
+      const incoming = JSON.parse(await f.text());
+      if (!incoming.supplements || !incoming.log) throw new Error();
+      data = merge(data, incoming); save(); toast('Importerat'); render();
+    } catch { toast('Filen kunde inte läsas'); }
+  };
+}
+
+// ---------- Påminnelser ----------
+function dueUntaken() {
+  // Otagna tillskott vars tid passerats inom de senaste 3 timmarna
+  const now = new Date();
+  const dk = dateKey(now);
+  const mins = now.getHours() * 60 + now.getMinutes();
+  return scheduledFor(now).filter(i => {
+    if (i.time === '—' || isTaken(dk, i.key)) return false;
+    const [h, m] = i.time.split(':').map(Number);
+    const diff = mins - (h * 60 + m);
+    return diff >= 0 && diff <= 180;
+  });
+}
+async function notify(title, body) {
+  if (!('Notification' in window) || Notification.permission !== 'granted') return false;
+  try {
+    const reg = await navigator.serviceWorker?.getRegistration();
+    if (reg) await reg.showNotification(title, { body, icon: 'icon-180.png', tag: 'tillskott' });
+    else new Notification(title, { body, icon: 'icon-180.png' });
+    return true;
+  } catch { return false; }
+}
+function checkReminders() {
+  if (currentView === 'today' && dateKey(viewDate) === dateKey(new Date())) renderToday();
+  if (!data.settings.notify) return;
+  const now = new Date();
+  const dk = dateKey(now);
+  const notified = lsGet(NOTIFIED_KEY, {});
+  if (notified.day !== dk) { notified.day = dk; notified.slots = []; }
+  const mins = now.getHours() * 60 + now.getMinutes();
+  // Notis bara för tidpunkter som just passerats (senaste 30 min), en gång per tidpunkt och dag
+  const fresh = dueUntaken().filter(i => {
+    const [h, m] = i.time.split(':').map(Number);
+    return mins - (h * 60 + m) <= 30 && !notified.slots.includes(i.time);
+  });
+  if (!fresh.length) return;
+  const slots = [...new Set(fresh.map(i => i.time))];
+  notify(`Dags för tillskott (${slots.join(', ')})`, fresh.map(i => i.s.name + (i.s.dose ? ` – ${i.s.dose}` : '')).join('\n'));
+  if (document.visibilityState === 'visible') toast('Dags för: ' + fresh.map(i => i.s.name).join(', '));
+  notified.slots.push(...slots);
+  lsSet(NOTIFIED_KEY, notified);
+}
+
+// ---------- Synk ----------
+function merge(a, b) {
+  const out = { supplements: { ...a.supplements }, log: {}, settings: a.settings || b.settings || { notify: false } };
+  for (const [id, s] of Object.entries(b.supplements || {})) {
+    if (!out.supplements[id] || (s.updatedAt || 0) > (out.supplements[id].updatedAt || 0)) out.supplements[id] = s;
+  }
+  for (const src of [a.log || {}, b.log || {}]) {
+    for (const [dk, entries] of Object.entries(src)) {
+      out.log[dk] = out.log[dk] || {};
+      for (const [k, e] of Object.entries(entries)) {
+        if (!out.log[dk][k] || (e.t || 0) > (out.log[dk][k].t || 0)) out.log[dk][k] = e;
+      }
+    }
+  }
+  return out;
+}
+async function gh(path, opts = {}) {
+  const res = await fetch('https://api.github.com' + path, {
+    ...opts,
+    headers: { Authorization: `Bearer ${sync.token}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json', ...(opts.headers || {}) },
+    cache: 'no-store'
+  });
+  if (res.status === 401) throw new Error('Token ogiltig');
+  if (res.status === 403 || res.status === 404) {
+    if (path.startsWith('/gists/')) { const e = new Error('Gist saknas'); e.missing = true; throw e; }
+    throw new Error('Token saknar gist-behörighet');
+  }
+  if (!res.ok) throw new Error('GitHub svarade ' + res.status);
+  return res.json();
+}
+async function findGist() {
+  for (let page = 1; page <= 10; page++) {
+    const list = await gh(`/gists?per_page=100&page=${page}`);
+    const hit = list.find(g => g.files && g.files[GIST_FILE] && g.description === GIST_DESC);
+    if (hit) return hit.id;
+    if (list.length < 100) break;
+  }
+  return '';
+}
+function payload() {
+  const { settings, ...rest } = data; // inställningar är per enhet
+  return JSON.stringify({ ...rest, app: 'tillskott', version: 1 });
+}
+let syncing = false, syncError = '', syncTimer = null, syncAgain = false;
+function scheduleSync() {
+  if (!sync.token) return;
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(() => doSync(false), 1500);
+  renderSyncState('pending');
+}
+async function doSync(manual) {
+  if (!sync.token) return;
+  if (syncing) { syncAgain = true; return; }
+  syncing = true; syncError = ''; renderSyncState();
+  try {
+    if (!sync.gistId) sync.gistId = await findGist();
+    let remote = null;
+    if (sync.gistId) {
+      try {
+        const g = await gh(`/gists/${sync.gistId}`);
+        const f = g.files[GIST_FILE];
+        if (f) remote = JSON.parse(f.truncated ? await (await fetch(f.raw_url)).text() : f.content);
+      } catch (e) { if (e.missing) sync.gistId = ''; else throw e; }
+    }
+    if (remote) {
+      const before = JSON.stringify([data.supplements, data.log]);
+      data = merge(data, remote);
+      save(false);
+      if (JSON.stringify([data.supplements, data.log]) !== before) render();
+    }
+    const body = JSON.stringify({ description: GIST_DESC, files: { [GIST_FILE]: { content: payload() } } });
+    if (sync.gistId) await gh(`/gists/${sync.gistId}`, { method: 'PATCH', body });
+    else sync.gistId = (await gh('/gists', { method: 'POST', body: JSON.stringify({ description: GIST_DESC, public: false, files: { [GIST_FILE]: { content: payload() } } }) })).id;
+    sync.lastSync = Date.now();
+    lsSet(SYNC_KEY, sync);
+    if (manual) toast('Synkat');
+  } catch (e) {
+    syncError = e.message || 'Synk misslyckades';
+    if (manual) toast(syncError);
+  } finally {
+    syncing = false; renderSyncState();
+    if (syncAgain) { syncAgain = false; doSync(false); }
+  }
+}
+function renderSyncState(state) {
+  const b = document.getElementById('syncState');
+  if (!sync.token) { b.textContent = 'Lokalt'; b.title = 'Synk ej kopplad – se Inställningar'; return; }
+  if (syncing) b.textContent = 'Synkar…';
+  else if (syncError) { b.textContent = '⚠︎ Synkfel'; b.title = syncError; }
+  else if (state === 'pending') b.textContent = 'Ändrad…';
+  else { b.textContent = '✓ Synkad'; b.title = sync.lastSync ? 'Senast ' + new Date(sync.lastSync).toLocaleString('sv-SE') : ''; }
+}
+document.getElementById('syncState').onclick = () => sync.token ? doSync(true) : show('settings');
+
+// ---------- Övrigt ----------
+let toastTimer;
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState !== 'visible') return;
+  if (currentView === 'today' && dateKey(viewDate) !== dateKey(new Date()) && Date.now() - lastActive > 30 * 60e3) viewDate = new Date();
+  render(); checkReminders(); if (sync.token) doSync(false);
+});
+let lastActive = Date.now();
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') lastActive = Date.now(); });
+
+if ('serviceWorker' in navigator && location.protocol !== 'file:') navigator.serviceWorker.register('sw.js').catch(() => {});
+
+render();
+checkReminders();
+setInterval(checkReminders, 30e3);
+if (sync.token) doSync(false);
+</script>
+</body>
+</html>
